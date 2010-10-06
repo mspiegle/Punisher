@@ -1,0 +1,11 @@
+http:
+  url: http://vm01/a.jpg
+  md5: d8e8fca2dc0f896fd7cb4cb0031ba249
+http:
+  url: http://vm01/b.jpg
+  md5: 2b00042f7481c7b056c4b410d28f33cf
+http:
+  url: http://vm01/c.jpg
+  md5: d8016131a2724252b2419bf645aab221
+http:
+  url: http://vm01/d.jpg
