@@ -61,6 +61,8 @@ clean:
 	@rm -f $(SAR)
 	@echo "Removing:  " $(ALL_OBJ)
 	@rm -f $(ALL_OBJ)
+	@echo "Removing:  " $(MAIN_OBJ)
+	@rm -f $(MAIN_OBJ)
 	@echo "Cleaning:   Logging"
 	@$(MAKE) -s -C ../Logging clean
 	@echo "Cleaning:   M"
