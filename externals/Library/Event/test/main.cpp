@@ -1,125 +1,39 @@
 #include "EpollManager.h"
-#include "Item.h"
-#include "TcpSocket.h"
 #include "Logging.h"
+#include "TcpSocket.h"
 
 #include <stdio.h>
-#include <unistd.h>
-
-void HandleWriteable(const Event::Item& item);
-void HandleReadable(const Event::Item& item);
-void HandleHangup(const Event::Item& item);
-void HandleError(const Event::Item& item);
-
-Event::EpollManager manager;
-
-void
-HandleWriteable(const Event::Item& item) {
-	printf("Socket is writeable\n");
-
-	Network::TcpSocket* socket;
-	socket = static_cast<Network::TcpSocket*>(item.GetSocket());
-	char data[] = "HTTP/1.0 200 OK";
-	size_t bw = sizeof(data);
-	socket->Write(data, &bw);
-
-	return;
-}
-
-void
-HandleReadable(const Event::Item& item) {
-	Logging::Info("Socket is readable");
-
-	Network::TcpSocket* socket;
-	socket = static_cast<Network::TcpSocket*>(item.GetSocket());
-	char data[1024];
-	size_t br = sizeof(data);
-	socket->Read(data, &br);
-
-	//manager.AddSocket(socket, Event::Readable, NULL);
-	socket->Close();
-	delete(socket);
-
-	return;
-}
-
-void
-HandleAcceptable(const Event::Item& item) {
-	Logging::Info("Socket is accepting");
-	Network::TcpSocket* socket;
-	socket = static_cast<Network::TcpSocket*>(item.GetSocket());
-
-	Network::TcpSocket* newsock;
-	if (NULL != (newsock = socket->Accept())) {
-		Logging::Info("Adding socket to event queue\n");
-		manager.AddSocket(newsock, Event::Readable, NULL);
-	}
-	Logging::Info("Adding accept socket back to queue\n");
-	manager.AddSocket(socket, Event::Readable, NULL);
-
-	return;
-}
-
-void
-HandleHangup(const Event::Item& item) {
-	printf("Socket is hanging up\n");
-	Network::TcpSocket* socket;
-	socket = static_cast<Network::TcpSocket*>(item.GetSocket());
-	socket->Close();
-	return;
-}
-
-void
-HandleError(const Event::Item& item) {
-	printf("Socket has error\n");
-	Network::TcpSocket* socket;
-	socket = static_cast<Network::TcpSocket*>(item.GetSocket());
-	socket->Close();
-	return;
-}
 
 int main() {
+	//this is going to be interesting, but I'm going to try to create a client
+	//and server in the same file here, and they'll talk to each other.
+	Logging::SetTrace(true);
+	Logging::SetLogLevel(Logging::LEVEL_DEBUG);
+	Logging::Info("Starting test suite for Event");
 
-	//Logging::SetLogLevel(Logging::LevelDebug);
-	//Logging::SetTrace(true);
+	//create client/server managers
+	Event::EpollManager client_manager;
+	Event::EpollManager server_manager;
 
-	Logging::Info("Creating Event::EpollManager");
-
-	Logging::Info("Creating Network::Socket");
-	Network::TcpSocket* socket = new Network::TcpSocket();
-	socket->SetReuseAddr(true);
-	socket->Bind("0.0.0.0", 5000);
-	socket->Listen(64);
-
-	Logging::Info("Adding socket to manager");
-	manager.AddSocket(socket, Event::Readable, (void*)666);
-
-	int num_events;
-	bool running = true;
-	while (running) {
-		num_events = manager.Wait(1000);
-		//printf("num_events: [%d]\n", num_events);
-		while (num_events > 0) {
-			Event::Item item = manager.NextEvent();
-			manager.RemoveSocket(item.GetSocket());
-			--num_events;
-			if (item.IsWriteable()) {
-				HandleWriteable(item);
-			}
-			if (item.IsReadable()) {
-				HandleReadable(item);
-			}
-			if (item.IsAcceptable()) {
-				HandleAcceptable(item);
-			}
-			if (item.IsHangup()) {
-				HandleHangup(item);
-			}
-			if (item.IsError()) {
-				HandleError(item);
-			}
-		}
+	//create a client socket, and a server listen socket
+	//the server socket should be put in the listening state
+	Network::TcpSocket* client_socket = new Network::TcpSocket();
+	Network::TcpSocket* listen_socket = new Network::TcpSocket();
+	if (Network::NETWORK_SUCCESS != listen_socket->Bind("127.0.0.1", 5000)) {
+		Logging::Error("Error calling TcpSocket->Bind()");
+		return 1;
 	}
+	if (Network::NETWORK_SUCCESS != listen_socket->Listen(8)) {
+		Logging::Error("Error calling TcpSocket->Listen()");
+		return 1;
+	}
+
+	//stick the sockets in their respective managers
+	client_manager.AddSocket(client_socket, Event::Writeable, (void*)0);
+	server_manager.AddSocket(listen_socket, Event::Readable, (void*)0);
+
+	//
+
 
 	return 0;
 }
