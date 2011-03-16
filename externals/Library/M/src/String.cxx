@@ -5,7 +5,7 @@
  *      Author: mspiegle
  */
 
-#include "String.h"
+#include "String.hxx"
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>

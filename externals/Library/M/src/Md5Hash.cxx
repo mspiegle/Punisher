@@ -6,8 +6,8 @@
  * Md5Hash.cpp
  */
 
-#include "Md5Hash.h"
-#include "String.h"
+#include "Md5Hash.hxx"
+#include "String.hxx"
 
 #include <string.h>
 #include <openssl/md5.h>

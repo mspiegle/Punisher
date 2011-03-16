@@ -1,25 +1,25 @@
-CPP=g++
+CXX=g++
 C=gcc
 AR=ar
 INCLUDE=-Iinclude
-LDFLAGS=-lssl
+LDFLAGS=-lcrypto
 
-CPP_SRC = src/String.cpp \
-          src/Md5Hash.cpp
-MAIN_SRC = test/main.cpp
+CXX_SRC = src/String.cxx \
+          src/Md5Hash.cxx
+MAIN_SRC = test/main.cxx
 C_SRC   = 
-CPP_OBJ = $(patsubst %.cpp,%.cpp.o,$(CPP_SRC))
+CXX_OBJ = $(patsubst %.cxx,%.cxx.o,$(CXX_SRC))
 C_OBJ   = $(patsubst %.c,%.c.o,$(C_SRC))
-MAIN_OBJ = $(patsubst %.cpp,%.cpp.o,$(MAIN_SRC))
-ALL_OBJ = $(CPP_OBJ) $(C_OBJ)
+MAIN_OBJ = $(patsubst %.cxx,%.cxx.o,$(MAIN_SRC))
+ALL_OBJ = $(CXX_OBJ) $(C_OBJ)
 BIN = teststring
 SAR = M.a
 
 all: $(BIN) $(SAR)
 
-%.cpp.o: %.cpp
+%.cxx.o: %.cxx
 	@echo "Compiling: " $<
-	@$(CPP) -c $(CPPFLAGS) $(INCLUDE) $< -o $@
+	@$(CXX) -c $(CXXFLAGS) $(INCLUDE) $< -o $@
 
 %.c.o: %.c
 	@echo "Compiling: " $<
@@ -27,7 +27,7 @@ all: $(BIN) $(SAR)
 
 $(BIN): $(ALL_OBJ) $(MAIN_OBJ)
 	@echo "Linking:   " $@
-	@$(CPP) $(CPPFLAGS) $(LDFLAGS) $(ALL_OBJ) $(MAIN_OBJ) -o $@
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $(ALL_OBJ) $(MAIN_OBJ) -o $@
 
 $(SAR): $(ALL_OBJ)
 	@echo "Archiving: " $@

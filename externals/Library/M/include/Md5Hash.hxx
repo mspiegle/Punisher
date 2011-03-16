@@ -9,7 +9,7 @@
 #ifndef _M_MD5HASH_H_
 #define _M_MD5HASH_H_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <openssl/md5.h>
 

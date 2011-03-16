@@ -1,5 +1,5 @@
-#include "String.h"
-#include "Md5Hash.h"
+#include "String.hxx"
+#include "Md5Hash.hxx"
 
 #include <stdio.h>
 
