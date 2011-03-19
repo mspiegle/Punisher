@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wl,-search_paths_first -headerpad_max_install_names  CMakeFiles/teststring.dir/main.cxx.o  -o teststring  ../src/libM.a -lcrypto 

@@ -1,0 +1,2 @@
+/Users/mspiegle/src/cpp/Punisher/externals/Library/M/build/src/CMakeFiles/M.dir
+/Users/mspiegle/src/cpp/Punisher/externals/Library/M/build/test/CMakeFiles/teststring.dir

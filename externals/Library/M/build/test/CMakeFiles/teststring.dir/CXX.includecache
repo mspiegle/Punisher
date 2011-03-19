@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/Md5Hash.hxx
+String.hxx
+../include/String.hxx
+openssl/md5.h
+-
+
+../include/String.hxx
+stddef.h
+-
+
+/Users/mspiegle/src/cpp/Punisher/externals/Library/M/test/main.cxx
+String.hxx
+/Users/mspiegle/src/cpp/Punisher/externals/Library/M/test/String.hxx
+Md5Hash.hxx
+/Users/mspiegle/src/cpp/Punisher/externals/Library/M/test/Md5Hash.hxx
+stdio.h
+-
+
