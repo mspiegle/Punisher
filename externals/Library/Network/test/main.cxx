@@ -1,7 +1,7 @@
-#include "TcpSocket.h"
-#include "Logging.h"
-#include "Host.h"
-#include "HostAddress.h"
+#include "TcpSocket.hxx"
+#include "Logging.hxx"
+#include "Host.hxx"
+#include "HostAddress.hxx"
 
 #include <stdio.h>
 #include <string.h>
