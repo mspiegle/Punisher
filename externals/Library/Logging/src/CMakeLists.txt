@@ -1,0 +1,3 @@
+INCLUDE_DIRECTORIES(${Logging_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${M_SOURCE_DIR}/include)
+ADD_LIBRARY(Logging Logging)

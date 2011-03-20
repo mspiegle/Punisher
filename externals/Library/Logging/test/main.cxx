@@ -1,4 +1,4 @@
-#include "Logging.h"
+#include "Logging.hxx"
 
 #include <stdio.h>
 #include <vector>
@@ -79,7 +79,7 @@ int main() {
 	       Logging::GetLogLevel().ToString().ToCString());
 
 	Logging::SetLogLevel(Logging::LEVEL_DEBUG);
-	//Logging::SetStackDump(true);
+	Logging::SetTrace(true);
 	a();
 
 	return 0;

@@ -9,7 +9,7 @@
 #ifndef _LOGGING_H_
 #define _LOGGING_H_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <vector>
 #include <stdarg.h>

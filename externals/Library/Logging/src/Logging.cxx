@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 09.08.09
  *
- * Logging.cpp
+ * Logging.cxx
  */
 
-#include "Logging.h"
+#include "Logging.hxx"
 
 #include <vector>
 #include <string.h>
