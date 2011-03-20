@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * HostName.cpp
+ * HostName.cxx
  */
 
-#include "HostName.h"
-#include "Logging.h"
+#include "HostName.hxx"
+#include "Logging.hxx"
 
 #include <string>
 

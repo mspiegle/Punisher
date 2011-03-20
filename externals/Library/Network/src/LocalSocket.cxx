@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.18.09
  *
- * LocalSocket.cpp
+ * LocalSocket.cxx
  */
 
-#include "LocalSocket.h"
-#include "Logging.h"
+#include "LocalSocket.hxx"
+#include "Logging.hxx"
 
 #include <unistd.h>
 #include <fcntl.h>

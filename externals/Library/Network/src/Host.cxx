@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * Host.cpp
+ * Host.cxx
  */
 
-#include "Host.h"
-#include "Logging.h"
-#include "Resolve.h"
-#include "String.h"
+#include "Host.hxx"
+#include "Logging.hxx"
+#include "Resolve.hxx"
+#include "String.hxx"
 
 #include <arpa/inet.h>
 

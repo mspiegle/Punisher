@@ -3,12 +3,12 @@
  * by Michael Spiegle
  * 09.06.09
  *
- * Socket.cpp
+ * Socket.cxx
  */
 
-#include "Socket.h"
-#include "Logging.h"
-#include "Network.h"
+#include "Socket.hxx"
+#include "Logging.hxx"
+#include "Network.hxx"
 
 #include <unistd.h>
 #include <fcntl.h>

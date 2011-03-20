@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.07.09
  *
- * UnixSocket.cpp
+ * UnixSocket.cxx
  */
 
-#include "LocalSocket.h"
-#include "UnixSocket.h"
+#include "LocalSocket.hxx"
+#include "UnixSocket.hxx"
 
 namespace Network {
 

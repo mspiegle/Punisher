@@ -3,12 +3,12 @@
  * by Michael Spiegle
  * 01.21.10
  *
- * SocketProxy.cpp
+ * SocketProxy.cxx
  */
 
-#include "Network.h"
-#include "SocketProxy.h"
-#include "Logging.h"
+#include "Network.hxx"
+#include "SocketProxy.hxx"
+#include "Logging.hxx"
 
 #include <unistd.h>
 #include <fcntl.h>

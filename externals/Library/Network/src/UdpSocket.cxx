@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.07.09
  *
- * UdpSocket.cpp
+ * UdpSocket.cxx
  */
 
-#include "InetSocket.h"
-#include "UdpSocket.h"
+#include "InetSocket.hxx"
+#include "UdpSocket.hxx"
 
 namespace Network {
 

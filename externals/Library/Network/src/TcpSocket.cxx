@@ -3,12 +3,12 @@
  * by Michael Spiegle
  * 09.07.09
  *
- * TcpSocket.cpp
+ * TcpSocket.cxx
  */
 
-#include "InetSocket.h"
-#include "TcpSocket.h"
-#include "Logging.h"
+#include "InetSocket.hxx"
+#include "TcpSocket.hxx"
+#include "Logging.hxx"
 
 namespace Network {
 

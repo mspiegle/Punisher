@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * HostAddress.cpp
+ * HostAddress.cxx
  */
 
-#include "HostAddress.h"
-#include "Logging.h"
+#include "HostAddress.hxx"
+#include "Logging.hxx"
 
 #include <string>
 #include <string.h>

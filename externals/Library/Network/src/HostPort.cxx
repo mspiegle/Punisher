@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * HostPort.cpp
+ * HostPort.cxx
  */
 
-#include "HostPort.h"
-#include "Logging.h"
+#include "HostPort.hxx"
+#include "Logging.hxx"
 
 #include <string>
 #include <stdint.h>

@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 09.18.09
  *
- * InetSocket.cpp
+ * InetSocket.cxx
  */
 
-#include "InetSocket.h"
-#include "Logging.h"
-#include "Host.h"
-#include "String.h"
+#include "InetSocket.hxx"
+#include "Logging.hxx"
+#include "Host.hxx"
+#include "String.hxx"
 
 #include <unistd.h>
 #include <fcntl.h>

@@ -3,12 +3,12 @@
  * by Michael Spiegle
  * 10.30.09
  *
- * Resolve.cpp
+ * Resolve.cxx
  */
 
-#include "Resolve.h"
-#include "Logging.h"
-#include "String.h"
+#include "Resolve.hxx"
+#include "Logging.hxx"
+#include "String.hxx"
 
 #include <netinet/in.h>
 #include <netdb.h>
