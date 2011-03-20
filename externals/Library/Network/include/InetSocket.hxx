@@ -9,8 +9,8 @@
 #ifndef _NETWORK_INETSOCKET_H_
 #define _NETWORK_INETSOCKET_H_
 
-#include "Socket.h"
-#include "Host.h"
+#include "Socket.hxx"
+#include "Host.hxx"
 
 #include <sys/types.h>
 #include <sys/socket.h>

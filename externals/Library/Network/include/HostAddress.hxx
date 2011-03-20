@@ -9,7 +9,7 @@
 #ifndef _NETWORK_HOSTADDRESS_H_
 #define _NETWORK_HOSTADDRESS_H_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <arpa/inet.h>
 

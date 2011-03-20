@@ -9,7 +9,7 @@
 #ifndef _NETWORK_SOCKET_H_
 #define _NETWORK_SOCKET_H_
 
-#include "Network.h"
+#include "Network.hxx"
 
 #include <sys/types.h>
 #include <sys/socket.h>

@@ -9,9 +9,9 @@
 #ifndef _NETWORK_HOST_H_
 #define _NETWORK_HOST_H_
 
-#include "HostAddress.h"
-#include "HostPort.h"
-#include "HostName.h"
+#include "HostAddress.hxx"
+#include "HostPort.hxx"
+#include "HostName.hxx"
 
 #include <string>
 

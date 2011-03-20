@@ -9,7 +9,7 @@
 #ifndef _NETWORK_HOSTPORT_H_
 #define _NETWORK_HOSTPORT_H_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <stdint.h>
 

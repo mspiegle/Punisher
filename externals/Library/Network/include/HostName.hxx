@@ -9,7 +9,7 @@
 #ifndef _NETWORK_HOSTNAME_H_
 #define _NETWORK_HOSTNAME_H_
 
-#include "String.h"
+#include "String.hxx"
 
 namespace Network {
 

@@ -1,0 +1,3 @@
+INCLUDE_DIRECTORIES(${Network_SOURCE_DIR}/include)
+ADD_EXECUTABLE(nettest main)
+TARGET_LINK_LIBRARIES(nettest Network)

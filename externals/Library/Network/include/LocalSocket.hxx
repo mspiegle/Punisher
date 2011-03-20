@@ -9,7 +9,7 @@
 #ifndef _NETWORK_LOCALSOCKET_H_
 #define _NETWORK_LOCALSOCKET_H_
 
-#include "Socket.h"
+#include "Socket.hxx"
 
 #include <sys/types.h>
 #include <sys/socket.h>

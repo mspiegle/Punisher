@@ -9,8 +9,8 @@
 #ifndef _NETWORK_SOCKETPROXY_H_
 #define _NETWORK_SOCKETPROXY_H_
 
-#include "Network.h"
-#include "Socket.h"
+#include "Network.hxx"
+#include "Socket.hxx"
 
 #include <sys/types.h>
 #include <sys/socket.h>

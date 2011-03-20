@@ -9,7 +9,7 @@
 #ifndef _NETWORK_RESOLVE_H_
 #define _NETWORK_RESOLVE_H_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <netinet/in.h>
 
