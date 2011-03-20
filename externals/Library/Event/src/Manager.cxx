@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * Manager.cpp
+ * Manager.cxx
  */
 
-#include "Manager.h"
-#include "Logging.h"
+#include "Manager.hxx"
+#include "Logging.hxx"
 
 namespace Event {
 

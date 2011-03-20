@@ -3,14 +3,15 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * Item.h
+ * Item.hxx
  */
 
-#ifndef _EVENT_ITEM_H_
-#define _EVENT_ITEM_H_
+#ifndef _EVENT_ITEM_HXX_
+#define _EVENT_ITEM_HXX_
+
+#include "Socket.hxx"
 
 #include <stdint.h>
-#include <Socket.h>
 
 namespace Event {
 

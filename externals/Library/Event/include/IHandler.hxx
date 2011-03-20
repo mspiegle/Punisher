@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 10.06.09
  *
- * IHandler.h
+ * IHandler.hxx
  */
 
-#ifndef _EVENT_IHANDLER_H_
-#define _EVENT_IHANDLER_H_
+#ifndef _EVENT_IHANDLER_HXX_
+#define _EVENT_IHANDLER_HXX_
 
-#include "Item.h"
+#include "Item.hxx"
 
 namespace Event {
 

@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * EpollManager.cpp
+ * EpollManager.cxx
  */
 
-#include "EpollManager.h"
-#include "Logging.h"
+#include "EpollManager.hxx"
+#include "Logging.hxx"
 
 #include <sys/epoll.h>
 #include <unistd.h>

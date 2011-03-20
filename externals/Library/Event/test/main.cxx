@@ -1,6 +1,6 @@
-#include "EpollManager.h"
-#include "Logging.h"
-#include "TcpSocket.h"
+#include "EpollManager.hxx"
+#include "Logging.hxx"
+#include "TcpSocket.hxx"
 
 #include <stdio.h>
 

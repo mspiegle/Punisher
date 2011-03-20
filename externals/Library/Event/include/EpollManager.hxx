@@ -3,15 +3,15 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * EpollManager.h
+ * EpollManager.hxx
  */
 
-#ifndef _EVENT_EPOLLMANAGER_H_
-#define _EVENT_EPOLLMANAGER_H_
+#ifndef _EVENT_EPOLLMANAGER_HXX_
+#define _EVENT_EPOLLMANAGER_HXX_
 
-#include "Manager.h"
-#include "Socket.h"
-#include "Item.h"
+#include "Manager.hxx"
+#include "Socket.hxx"
+#include "Item.hxx"
 
 #include <stdint.h>
 #include <queue>

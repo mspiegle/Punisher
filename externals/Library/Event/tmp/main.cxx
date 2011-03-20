@@ -1,7 +1,7 @@
-#include "EpollManager.h"
-#include "Item.h"
-#include "TcpSocket.h"
-#include "Logging.h"
+#include "EpollManager.hxx"
+#include "Item.hxx"
+#include "TcpSocket.hxx"
+#include "Logging.hxx"
 
 #include <stdio.h>
 #include <unistd.h>

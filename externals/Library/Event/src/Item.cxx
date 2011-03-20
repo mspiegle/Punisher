@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * Item.cpp
+ * Item.cxx
  */
 
-#include "Item.h"
-#include "Logging.h"
+#include "Item.hxx"
+#include "Logging.hxx"
 
 namespace Event {
 

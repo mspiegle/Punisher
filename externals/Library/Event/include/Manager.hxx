@@ -3,14 +3,14 @@
  * by Michael Spiegle
  * 09.16.09
  *
- * Manager.h
+ * Manager.hxx
  */
 
-#ifndef _EVENT_MANAGER_H_
-#define _EVENT_MANAGER_H_
+#ifndef _EVENT_MANAGER_HXX_
+#define _EVENT_MANAGER_HXX_
 
-#include "Socket.h"
-#include "Item.h"
+#include "Socket.hxx"
+#include "Item.hxx"
 
 #include <stdint.h>
 #include <queue>
