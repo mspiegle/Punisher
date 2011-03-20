@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 01.21.10
  *
- * SocketProxy.h
+ * SocketProxy.hxx
  */
 
-#ifndef _NETWORK_SOCKETPROXY_H_
-#define _NETWORK_SOCKETPROXY_H_
+#ifndef _NETWORK_SOCKETPROXY_HXX_
+#define _NETWORK_SOCKETPROXY_HXX_
 
 #include "Network.hxx"
 #include "Socket.hxx"

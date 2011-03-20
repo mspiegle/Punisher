@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * UdpSocket.h
+ * UdpSocket.hxx
  */
 
-#ifndef _NETWORK_UDPSOCKET_H_
-#define _NETWORK_UDPSOCKET_H_
+#ifndef _NETWORK_UDPSOCKET_HXX_
+#define _NETWORK_UDPSOCKET_HXX_
 
-#include "InetSocket.h"
+#include "InetSocket.hxx"
 
 namespace Network {
 

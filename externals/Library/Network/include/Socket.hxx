@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * Socket.h
+ * Socket.hxx
  */
 
-#ifndef _NETWORK_SOCKET_H_
-#define _NETWORK_SOCKET_H_
+#ifndef _NETWORK_SOCKET_HXX_
+#define _NETWORK_SOCKET_HXX_
 
 #include "Network.hxx"
 

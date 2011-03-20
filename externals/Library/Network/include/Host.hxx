@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * Host.h
+ * Host.hxx
  */
 
-#ifndef _NETWORK_HOST_H_
-#define _NETWORK_HOST_H_
+#ifndef _NETWORK_HOST_HXX_
+#define _NETWORK_HOST_HXX_
 
 #include "HostAddress.hxx"
 #include "HostPort.hxx"

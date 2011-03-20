@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.18.09
  *
- * InetSocket.h
+ * InetSocket.hxx
  */
 
-#ifndef _NETWORK_INETSOCKET_H_
-#define _NETWORK_INETSOCKET_H_
+#ifndef _NETWORK_INETSOCKET_HXX_
+#define _NETWORK_INETSOCKET_HXX_
 
 #include "Socket.hxx"
 #include "Host.hxx"

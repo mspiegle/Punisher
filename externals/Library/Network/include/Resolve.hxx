@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.30.09
  *
- * Resolve.h
+ * Resolve.hxx
  */
 
-#ifndef _NETWORK_RESOLVE_H_
-#define _NETWORK_RESOLVE_H_
+#ifndef _NETWORK_RESOLVE_HXX_
+#define _NETWORK_RESOLVE_HXX_
 
 #include "String.hxx"
 

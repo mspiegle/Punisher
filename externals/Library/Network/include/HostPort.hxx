@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * HostPort.h
+ * HostPort.hxx
  */
 
-#ifndef _NETWORK_HOSTPORT_H_
-#define _NETWORK_HOSTPORT_H_
+#ifndef _NETWORK_HOSTPORT_HXX_
+#define _NETWORK_HOSTPORT_HXX_
 
 #include "String.hxx"
 

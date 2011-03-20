@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.18.09
  *
- * LocalSocket.h
+ * LocalSocket.hxx
  */
 
-#ifndef _NETWORK_LOCALSOCKET_H_
-#define _NETWORK_LOCALSOCKET_H_
+#ifndef _NETWORK_LOCALSOCKET_HXX_
+#define _NETWORK_LOCALSOCKET_HXX_
 
 #include "Socket.hxx"
 

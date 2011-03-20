@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * TcpSocket.h
+ * TcpSocket.hxx
  */
 
-#ifndef _NETWORK_TCPSOCKET_H_
-#define _NETWORK_TCPSOCKET_H_
+#ifndef _NETWORK_TCPSOCKET_HXX_
+#define _NETWORK_TCPSOCKET_HXX_
 
-#include "InetSocket.h"
+#include "InetSocket.hxx"
 
 namespace Network {
 

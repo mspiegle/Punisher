@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.28.09
  *
- * HostAddress.h
+ * HostAddress.hxx
  */
 
-#ifndef _NETWORK_HOSTADDRESS_H_
-#define _NETWORK_HOSTADDRESS_H_
+#ifndef _NETWORK_HOSTADDRESS_HXX_
+#define _NETWORK_HOSTADDRESS_HXX_
 
 #include "String.hxx"
 

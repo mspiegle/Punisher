@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * UnixSocket.h
+ * UnixSocket.hxx
  */
 
-#ifndef _NETWORK_UNIXSOCKET_H_
-#define _NETWORK_UNIXSOCKET_H_
+#ifndef _NETWORK_UNIXSOCKET_HXX_
+#define _NETWORK_UNIXSOCKET_HXX_
 
-#include "LocalSocket.h"
+#include "LocalSocket.hxx"
 
 namespace Network {
 
