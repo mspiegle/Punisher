@@ -1,4 +1,9 @@
+#ifdef __APPLE__
+#include "KqueueManager.hxx"
+#else
 #include "EpollManager.hxx"
+#endif
+
 #include "Logging.hxx"
 #include "TcpSocket.hxx"
 
@@ -12,8 +17,13 @@ int main() {
 	Logging::Info("Starting test suite for Event");
 
 	//create client/server managers
+#ifdef __APPLE__
+	Event::KqueueManager client_manager;
+	Event::KqueueManager server_manager;
+#else
 	Event::EpollManager client_manager;
 	Event::EpollManager server_manager;
+#endif
 
 	//create a client socket, and a server listen socket
 	//the server socket should be put in the listening state

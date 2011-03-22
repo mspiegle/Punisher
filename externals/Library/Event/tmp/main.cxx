@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "KqueueManager.hxx"
+#else
 #include "EpollManager.hxx"
+#endif
 #include "Item.hxx"
 #include "TcpSocket.hxx"
 #include "Logging.hxx"
@@ -11,7 +15,11 @@ void HandleReadable(const Event::Item& item);
 void HandleHangup(const Event::Item& item);
 void HandleError(const Event::Item& item);
 
+#ifdef __APPLE__
+Event::KqueueManager manager;
+#else
 Event::EpollManager manager;
+#endif
 
 void
 HandleWriteable(const Event::Item& item) {
