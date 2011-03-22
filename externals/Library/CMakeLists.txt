@@ -6,5 +6,7 @@ ADD_SUBDIRECTORY(Logging "${CMAKE_CURRENT_BINARY_DIR}/Logging")
 ADD_SUBDIRECTORY(Network "${CMAKE_CURRENT_BINARY_DIR}/Network")
 ADD_SUBDIRECTORY(Event "${CMAKE_CURRENT_BINARY_DIR}/Event")
 
-ADD_LIBRARY(Library M Logging Network Event)
+FILE(GLOB M_SRC ${M_SOURCE_DIR}/src/*)
+
+ADD_LIBRARY(Library ${M_SRC} Logging Network Event)
 TARGET_LINK_LIBRARIES(Library M Logging Network Event)
