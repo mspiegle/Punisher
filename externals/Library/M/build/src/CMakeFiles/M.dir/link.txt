@@ -1,2 +1,0 @@
-/usr/bin/ar cr libM.a  CMakeFiles/M.dir/Md5Hash.cxx.o CMakeFiles/M.dir/String.cxx.o
-/usr/bin/ranlib libM.a
