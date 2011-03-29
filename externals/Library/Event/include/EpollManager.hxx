@@ -39,6 +39,8 @@ class EpollManager : public Manager {
 		bool RemoveSocket(Network::Socket* socket);
 };
 
+typedef EpollManager PollManager;
+
 }
 
 #endif

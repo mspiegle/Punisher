@@ -33,8 +33,7 @@ class KqueueManager : public Manager {
 		~KqueueManager();
 
 		int Wait(int timeout);
-		bool AddSocket(Network::Socket* socket, uint32_t filter,
-		               void* user_data);
+		bool AddSocket(Network::Socket* socket, uint32_t filter, void* user_data);
 		bool RemoveSocket(Network::Socket* socket);
 };
 
