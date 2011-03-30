@@ -3,16 +3,16 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Request.h
+ * Request.hxx
  */
 
-#ifndef _PUNISHER_REQUEST_H_
-#define _PUNISHER_REQUEST_H_
+#ifndef _PUNISHER_REQUEST_HXX_
+#define _PUNISHER_REQUEST_HXX_
 
-#include "Validator.h"
-#include "Host.h"
-#include "String.h"
-#include "Socket.h"
+#include "Validator.hxx"
+#include "Host.hxx"
+#include "String.hxx"
+#include "Socket.hxx"
 
 namespace Punisher {
 

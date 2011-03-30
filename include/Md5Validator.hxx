@@ -3,16 +3,16 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Md5Validator.h
+ * Md5Validator.hxx
  *
  */
 
-#ifndef _PUNISHER_MD5VALIDATOR_H_
-#define _PUNISHER_MD5VALIDATOR_H_
+#ifndef _PUNISHER_MD5VALIDATOR_HXX_
+#define _PUNISHER_MD5VALIDATOR_HXX_
 
-#include "Validator.h"
-#include "Md5Hash.h"
-#include "String.h"
+#include "Validator.hxx"
+#include "Md5Hash.hxx"
+#include "String.hxx"
 
 namespace Punisher {
 

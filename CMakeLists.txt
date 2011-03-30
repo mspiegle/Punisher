@@ -1,14 +1,17 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(Punisher)
 
-ADD_SUBDIRECTORY(Library "${CMAKE_CURRENT_BINARY_DIR}/Library")
-
-FILE(GLOB Punisher_SRC ${Punisher_SOURCE_DIR}/src/*)
+ADD_SUBDIRECTORY(externals/Library "${CMAKE_CURRENT_BINARY_DIR}/Library")
+ADD_SUBDIRECTORY(src)
 
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Network/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Logging/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Event/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/M/include)
+INCLUDE_DIRECTORIES(${Punisher_SOURCE_DIR}/include)
 
-ADD_LIBRARY(Library ${M_SRC} ${Logging_SRC} ${Network_SRC} ${Event_SRC})
-TARGET_LINK_LIBRARIES(Library M Logging Network Event)
+FIND_PACKAGE(libyaml REQUIRED)
+
+INCLUDE(${Punisher_SOURCE_DIR}/src/SourceFiles.txt)
+ADD_EXECUTABLE(Punisher ${Punisher_SRC})
+TARGET_LINK_LIBRARIES(Punisher Library)

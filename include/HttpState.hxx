@@ -3,18 +3,18 @@
  * by Michael Spiegle
  * 10.19.09
  *
- * HttpState.h
+ * HttpState.hxx
  */
 
-#ifndef _PUNISHER_HTTPSTATE_H_
-#define _PUNISHER_HTTPSTATE_H_
+#ifndef _PUNISHER_HTTPSTATE_HXX_
+#define _PUNISHER_HTTPSTATE_HXX_
 
-#include "State.h"
-#include "HttpStatus.h"
-#include "HttpVersion.h"
-#include "String.h"
-#include "Network.h"
-#include "Socket.h"
+#include "State.hxx"
+#include "HttpStatus.hxx"
+#include "HttpVersion.hxx"
+#include "String.hxx"
+#include "Network.hxx"
+#include "Socket.hxx"
 
 #include <map>
 #include <stdint.h>

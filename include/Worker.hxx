@@ -3,19 +3,19 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Worker.h
+ * Worker.hxx
  */
 
-#ifndef _PUNISHER_WORKER_H_
-#define _PUNISHER_WORKER_H_
+#ifndef _PUNISHER_WORKER_HXX_
+#define _PUNISHER_WORKER_HXX_
 
-#include "Config.h"
-#include "IHandler.h"
-#include "EpollManager.h"
-#include "Thread.h"
-#include "Item.h"
-#include "String.h"
-#include "Statistics.h"
+#include "Config.hxx"
+#include "IHandler.hxx"
+#include "EpollManager.hxx"
+#include "Thread.hxx"
+#include "Item.hxx"
+#include "String.hxx"
+#include "Statistics.hxx"
 
 #include <stdint.h>
 #include <deque>

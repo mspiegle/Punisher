@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.23.09
  *
- * HttpMethod.cpp
+ * HttpMethod.cxx
  */
 
-#include "HttpMethod.h"
-#include "String.h"
+#include "HttpMethod.hxx"
+#include "String.hxx"
 
 #include <string.h>
 

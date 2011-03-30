@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 11.22.09
  *
- * HttpStatus.h
+ * HttpStatus.hxx
  */
 
-#ifndef _PUNISHER_HTTPSTATUS_H_
-#define _PUNISHER_HTTPSTATUS_H_
+#ifndef _PUNISHER_HTTPSTATUS_HXX_
+#define _PUNISHER_HTTPSTATUS_HXX_
 
-#include "String.h"
+#include "String.hxx"
 
 namespace Punisher {
 

@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 05.10.10
  *
- * Statistics.h
+ * Statistics.hxx
  */
 
-#ifndef _PUNISHER_STATISTICS_H_
-#define _PUNISHER_STATISTICS_H_
+#ifndef _PUNISHER_STATISTICS_HXX_
+#define _PUNISHER_STATISTICS_HXX_
 
 #include <stdint.h>
 

@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * HttpRequest.cpp
+ * HttpRequest.cxx
  */
 
-#include "HttpRequest.h"
-#include "HttpState.h"
-#include "Logging.h"
-#include "TcpSocket.h"
+#include "HttpRequest.hxx"
+#include "HttpState.hxx"
+#include "Logging.hxx"
+#include "TcpSocket.hxx"
 
 #include <string.h>
 #include <stdlib.h>

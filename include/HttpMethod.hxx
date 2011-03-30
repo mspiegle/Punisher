@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 10.23.09
  *
- * HttpMethod.h
+ * HttpMethod.hxx
  */
 
-#ifndef _PUNISHER_HTTPMETHOD_H_
-#define _PUNISHER_HTTPMETHOD_H_
+#ifndef _PUNISHER_HTTPMETHOD_HXX_
+#define _PUNISHER_HTTPMETHOD_HXX_
 
-#include "String.h"
+#include "String.hxx"
 
 namespace Punisher {
 

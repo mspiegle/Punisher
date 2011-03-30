@@ -3,12 +3,12 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Md5Validator.cpp
+ * Md5Validator.cxx
  */
 
-#include "Validator.h"
-#include "Md5Validator.h"
-#include "String.h"
+#include "Validator.hxx"
+#include "Md5Validator.hxx"
+#include "String.hxx"
 
 #include <string.h>
 #include <stdio.h>

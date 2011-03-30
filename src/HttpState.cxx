@@ -3,15 +3,15 @@
  * by Michael Spiegle
  * 10.19.09
  *
- * HttpState.cpp
+ * HttpState.cxx
  */
 
-#include "HttpState.h"
-#include "Logging.h"
-#include "HttpRequest.h"
-#include "Socket.h"
-#include "TcpSocket.h"
-#include "Network.h"
+#include "HttpState.hxx"
+#include "Logging.hxx"
+#include "HttpRequest.hxx"
+#include "Socket.hxx"
+#include "TcpSocket.hxx"
+#include "Network.hxx"
 
 #include <string.h>
 #include <stdlib.h>
@@ -182,7 +182,7 @@ HttpState::ReadData(Network::Socket* socket) {
 				if (buffer[x] == '\n') {
 					//all we really care about is the content-length for now...
 					temp[iter] = '\0';
-					if (0 == strncmp("Content-Length", header_key.ToCString(), 15)) {
+					if (0 == strncmp("Content-Leng.hxx", header_key.ToCString(), 15)) {
 						proto_content_length = strtoll(temp, NULL, 10);
 					}
 					if (0 == strncmp("Connection", header_key.ToCString(), 10)) {
@@ -218,7 +218,7 @@ HttpState::ReadData(Network::Socket* socket) {
 				//this gives us a chance to verify that we got the necessary headers
 				//currently, we're only checking for content_length
 				if (proto_content_length < 1) {
-					LOGGING_DEBUG("HttpState::ReadData(): Missing Content-Length");
+					LOGGING_DEBUG("HttpState::ReadData(): Missing Content-Leng.hxx");
 					state = HTTP_DONE;
 					error = "No Content-Length header provided";
 					ret.success = false;

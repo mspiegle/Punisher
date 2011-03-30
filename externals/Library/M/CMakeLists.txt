@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-project(M)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(M)
 
-add_subdirectory(src)
-add_subdirectory(test)
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(test)

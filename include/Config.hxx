@@ -3,14 +3,14 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Config.h
+ * Config.hxx
  */
 
-#ifndef _PUNISHER_CONFIG_H_
-#define _PUNISHER_CONFIG_H_
+#ifndef _PUNISHER_CONFIG_HXX_
+#define _PUNISHER_CONFIG_HXX_
 
-#include "Request.h"
-#include "String.h"
+#include "Request.hxx"
+#include "String.hxx"
 
 #include <vector>
 #include <time.h>

@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Validator.cpp
+ * Validator.cxx
  */
 
-#include "Validator.h"
+#include "Validator.hxx"
 
 namespace Punisher {
 

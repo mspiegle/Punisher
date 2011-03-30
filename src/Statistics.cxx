@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 05.11.10
  *
- * Statistics.cpp
+ * Statistics.cxx
  */
 
-#include "Statistics.h"
+#include "Statistics.hxx"
 
 namespace Punisher {
 

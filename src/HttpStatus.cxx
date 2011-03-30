@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 11.22.09
  *
- * HttpStatus.cpp
+ * HttpStatus.cxx
  */
 
-#include "HttpStatus.h"
+#include "HttpStatus.hxx"
 
 #include <string>
 #include <stdlib.h>

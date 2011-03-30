@@ -3,14 +3,14 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Validator.h
+ * Validator.hxx
  *
  */
 
-#ifndef _PUNISHER_VALIDATOR_H_
-#define _PUNISHER_VALIDATOR_H_
+#ifndef _PUNISHER_VALIDATOR_HXX_
+#define _PUNISHER_VALIDATOR_HXX_
 
-#include "String.h"
+#include "String.hxx"
 
 #include <stddef.h>
 

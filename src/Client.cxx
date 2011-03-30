@@ -3,14 +3,14 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Client.cpp
+ * Client.cxx
  */
 
-#include "Client.h"
-#include "Config.h"
-#include "Worker.h"
-#include "Logging.h"
-#include "String.h"
+#include "Client.hxx"
+#include "Config.hxx"
+#include "Worker.hxx"
+#include "Logging.hxx"
+#include "String.hxx"
 
 #include <stdio.h>
 #include <vector>

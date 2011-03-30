@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * main.cpp
+ * main.cxx
  */
 
-#include "Client.h"
-#include "Logging.h"
+#include "Client.hxx"
+#include "Logging.hxx"
 
 #include <unistd.h>
 #include <stdlib.h>

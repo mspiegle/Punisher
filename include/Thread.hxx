@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Thread.h
+ * Thread.hxx
  */
 
-#ifndef _PUNISHER_THREAD_H_
-#define _PUNISHER_THREAD_H_
+#ifndef _PUNISHER_THREAD_HXX_
+#define _PUNISHER_THREAD_HXX_
 
 #include <pthread.h>
 

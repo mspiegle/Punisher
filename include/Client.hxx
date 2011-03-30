@@ -3,15 +3,15 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Client.h
+ * Client.hxx
  */
 
-#ifndef _PUNISHER_CLIENT_H_
-#define _PUNISHER_CLIENT_H_
+#ifndef _PUNISHER_CLIENT_HXX_
+#define _PUNISHER_CLIENT_HXX_
 
-#include "Worker.h"
-#include "Config.h"
-#include "String.h"
+#include "Worker.hxx"
+#include "Config.hxx"
+#include "String.hxx"
 
 #include <vector>
 #include <signal.h>

@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Request.cpp
+ * Request.cxx
  */
 
-#include "Request.h"
+#include "Request.hxx"
 
 namespace Punisher {
 

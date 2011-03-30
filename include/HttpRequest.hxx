@@ -3,17 +3,17 @@
  * by Michael Spiegle
  * 09.04.09
  *
- * HttpRequest.h
+ * HttpRequest.hxx
  */
 
-#ifndef _PUNISHER_HTTPREQUEST_H_
-#define _PUNISHER_HTTPREQUEST_H_
+#ifndef _PUNISHER_HTTPREQUEST_HXX_
+#define _PUNISHER_HTTPREQUEST_HXX_
 
-#include "Request.h"
-#include "HttpMethod.h"
-#include "HttpVersion.h"
-#include "HttpState.h"
-#include "String.h"
+#include "Request.hxx"
+#include "HttpMethod.hxx"
+#include "HttpVersion.hxx"
+#include "HttpState.hxx"
+#include "String.hxx"
 
 #include <map>
 #include <netinet/in.h>

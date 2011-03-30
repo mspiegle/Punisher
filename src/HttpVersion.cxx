@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 10.23.09
  *
- * HttpVersion.cpp
+ * HttpVersion.cxx
  */
 
-#include "HttpVersion.h"
-#include "String.h"
+#include "HttpVersion.hxx"
+#include "String.hxx"
 
 #include <string.h>
 

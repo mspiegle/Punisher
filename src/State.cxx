@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 10.15.09
  *
- * State.cpp
+ * State.cxx
  */
 
-#include "State.h"
+#include "State.hxx"
 
 namespace Punisher {
 

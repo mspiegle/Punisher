@@ -3,16 +3,16 @@
  * by Michael Spiegle
  * 10.15.09
  *
- * State.h
+ * State.hxx
  */
 
-#ifndef _PUNISHER_STATE_H_
-#define _PUNISHER_STATE_H_
+#ifndef _PUNISHER_STATE_HXX_
+#define _PUNISHER_STATE_HXX_
 
-#include "Validator.h"
-#include "String.h"
-#include "Network.h"
-#include "Socket.h"
+#include "Validator.hxx"
+#include "String.hxx"
+#include "Network.hxx"
+#include "Socket.hxx"
 
 #include <stddef.h>
 

@@ -3,11 +3,11 @@
  * by Michael Spiegle
  * 09.03.09
  *
- * Thread.cpp
+ * Thread.cxx
  */
 
-#include "Thread.h"
-#include "Logging.h"
+#include "Thread.hxx"
+#include "Logging.hxx"
 
 namespace Punisher {
 

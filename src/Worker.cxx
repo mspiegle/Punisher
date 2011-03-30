@@ -3,20 +3,20 @@
  * by Michael Spiegle
  * 10.12.09
  *
- * Worker.cpp
+ * Worker.cxx
  */
 
-#include "Config.h"
-#include "IHandler.h"
-#include "EpollManager.h"
-#include "Worker.h"
-#include "Item.h"
-#include "Request.h"
-#include "Logging.h"
-#include "State.h"
-#include "Network.h"
-#include "Socket.h"
-#include "Statistics.h"
+#include "Config.hxx"
+#include "IHandler.hxx"
+#include "EpollManager.hxx"
+#include "Worker.hxx"
+#include "Item.hxx"
+#include "Request.hxx"
+#include "Logging.hxx"
+#include "State.hxx"
+#include "Network.hxx"
+#include "Socket.hxx"
+#include "Statistics.hxx"
 
 #include <unistd.h>
 #include <stdio.h>

@@ -1,8 +1,8 @@
-#include "Config.h"
-#include "Logging.h"
-#include "HttpRequest.h"
-#include "Md5Validator.h"
-#include "String.h"
+#include "Config.hxx"
+#include "Logging.hxx"
+#include "HttpRequest.hxx"
+#include "Md5Validator.hxx"
+#include "String.hxx"
 
 #include <string.h>
 #include <errno.h>
