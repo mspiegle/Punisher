@@ -1,2 +1,5 @@
-include_directories(${M_SOURCE_DIR}/include)
-add_library(M Md5Hash String)
+INCLUDE(SourceFiles.txt)
+
+INCLUDE_DIRECTORIES(${M_SOURCE_DIR}/include)
+
+ADD_LIBRARY(M ${M_SRC})

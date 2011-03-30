@@ -1,0 +1,1 @@
+FILE(GLOB Logging_SRC ${Logging_SOURCE_DIR}/src/*)

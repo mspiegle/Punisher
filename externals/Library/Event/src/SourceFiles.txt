@@ -1,0 +1,17 @@
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	SET(
+		Event_SRC
+		${Event_SOURCE_DIR}/src/Item
+		${Event_SOURCE_DIR}/src/KqueueManager
+		${Event_SOURCE_DIR}/src/Manager
+	)
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	SET(
+		Event_SRC
+		${Event_SOURCE_DIR}/src/Item
+		${Event_SOURCE_DIR}/src/EpollManager
+		${Event_SOURCE_DIR}/src/Manager
+	)
+ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")

@@ -1,12 +1,8 @@
+INCLUDE(SourceFiles.txt)
+
 INCLUDE_DIRECTORIES(${Network_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Logging_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${M_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Event_SOURCE_DIR}/include)
 
-IF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	ADD_LIBRARY(Event Item KqueueManager Manager)
-ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
-IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	ADD_LIBRARY(Event Item EpollManager Manager)
-ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ADD_LIBRARY(Event ${Event_SRC})
