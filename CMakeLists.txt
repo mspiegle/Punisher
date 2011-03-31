@@ -10,8 +10,6 @@ INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Event/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/M/include)
 INCLUDE_DIRECTORIES(${Punisher_SOURCE_DIR}/include)
 
-FIND_PACKAGE(libyaml REQUIRED)
-
 INCLUDE(${Punisher_SOURCE_DIR}/src/SourceFiles.txt)
 ADD_EXECUTABLE(Punisher ${Punisher_SRC})
-TARGET_LINK_LIBRARIES(Punisher Library)
+TARGET_LINK_LIBRARIES(Punisher Library yaml pthread rt ssl)
