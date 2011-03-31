@@ -8,7 +8,7 @@
 
 #include "Config.hxx"
 #include "IHandler.hxx"
-#include "EpollManager.hxx"
+#include "PollManager.hxx"
 #include "Worker.hxx"
 #include "Item.hxx"
 #include "Request.hxx"

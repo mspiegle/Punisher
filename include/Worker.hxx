@@ -11,7 +11,7 @@
 
 #include "Config.hxx"
 #include "IHandler.hxx"
-#include "EpollManager.hxx"
+#include "PollManager.hxx"
 #include "Thread.hxx"
 #include "Item.hxx"
 #include "String.hxx"
@@ -32,7 +32,7 @@ class Worker : public Thread, public Event::IHandler {
 		uint64_t                     failed_requests;
 		const Config*                config;
 		Statistics                   stats;
-		Event::EpollManager          manager;
+		Event::PollManager          manager;
 		std::deque<M::String>        errors;
 		std::deque<Network::Socket*> keepalives;
 
