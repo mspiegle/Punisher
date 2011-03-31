@@ -23,4 +23,8 @@ Statistics::Statistics() {
 Statistics::~Statistics() {
 }
 
+void
+Statistics::Print() {
+}
+
 }

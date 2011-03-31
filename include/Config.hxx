@@ -23,7 +23,7 @@ class Config {
 	private:
 		int                   delay;
 		int                   threads;
-		int                   concurrent;
+		int                   connections;
 		bool                  validation;
 		bool                  fastmode;
 		bool                  keepalive;
@@ -54,8 +54,10 @@ class Config {
 		bool GetValidation() const;
 		void SetValidation(bool validation);
 
-		int  GetConcurrent() const;
-		void SetConcurrent(int concurrent);
+		int  GetConcurrentConnections() const;
+		void SetConcurrentConnections(int connections);
+
+		int  GetConnectionsPerThread() const;
 
 		size_t  GetIterations() const;
 		void SetIterations(size_t iterations);

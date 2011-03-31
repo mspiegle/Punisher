@@ -24,10 +24,6 @@
 namespace Punisher {
 
 Worker::Worker() {
-	total_requests = 0;
-	failed_requests = 0;
-	open_sockets = 0;
-	connected_sockets = 0;
 	next_request = 0;
 	iterations = (size_t)-1;
 	config = NULL;
@@ -65,11 +61,9 @@ void*
 Worker::ThreadMain() {
 	while (true == GetRunning()) {
 		//everytime we loop, make sure that we have enough sockets open
-		LOGGING_DEBUG("Worker::ThreadMain(): do we have enough sockets?");
-		while (open_sockets < (config->GetConcurrent() / config->GetThreads())) {
-			LOGGING_DEBUG("while (%d < (%d / %d))", open_sockets, 
-			              config->GetConcurrent(),
-			              config->GetThreads());
+		while (stats.GetOpenSockets() < config->GetConnectionsPerThread()) {
+			LOGGING_DEBUG("Worker::ThreadMain(): socket check: while (%d < %d)",
+			              stats.GetOpenSockets(), config->GetConnectionsPerThread());
 
 			//grab the next request and create socket
 			const Request* request = config->GetRequest(id, next_request);
@@ -107,7 +101,7 @@ Worker::ThreadMain() {
 			}
 
 			manager.AddSocket(socket, Event::Writeable, (void*)state);
-			open_sockets++;
+			stats.AddOpenSockets(1);
 		}
 
 		//TODO: I think there's a way to factor some of this out into the
@@ -138,7 +132,7 @@ Worker::ThreadMain() {
 		}
 		
 		//we did what was asked of us.  we can now stop
-		if (total_requests >= iterations) {
+		if (stats.GetTotalRequests() >= iterations) {
 			SetRunning(false);
 		}
 	}
@@ -169,11 +163,11 @@ Worker::HandleReadable(const Event::Item& item) {
 					keepalives.push_back(socket);
 				} else {
 					delete(socket);
-					--connected_sockets;
-					--open_sockets;
+					stats.AddOpenSockets(-1);
+					stats.AddConnectedSockets(-1);
 				}
 
-				++total_requests;
+				stats.AddTotalRequests(1);
 				break;
 
 			case MODE_READ:
@@ -194,10 +188,10 @@ Worker::HandleReadable(const Event::Item& item) {
 	errors.push_front(state->GetError());
 	delete(state);
 	delete(socket);
-	--connected_sockets;
-	--open_sockets;
-	++total_requests;
-	++failed_requests;
+	stats.AddConnectedSockets(-1);
+	stats.AddOpenSockets(-1);
+	stats.AddTotalRequests(1);
+	stats.AddFailedRequests(1);
 }
 
 void
@@ -225,13 +219,13 @@ Worker::HandleWriteable(const Event::Item& item) {
 		if (false == ret.success) {
 			errors.push_front(state->GetError());
 		}
-		++total_requests;
-		++failed_requests;
+		stats.AddTotalRequests(1);
+		stats.AddFailedRequests(1);
 	} else {
 		//we'll handle the connect right here
 		Network::network_error_t status;
 		if (Network::NETWORK_SUCCESS == (status = state->Connect(socket))) {
-			connected_sockets++;
+			stats.AddConnectedSockets(1);
 			manager.AddSocket(socket, Event::Writeable, (void*)state);
 			return;
 		}
@@ -247,8 +241,8 @@ Worker::HandleWriteable(const Event::Item& item) {
 
 	delete(state);
 	delete(socket);
-	--open_sockets;
-	--connected_sockets;
+	stats.AddOpenSockets(-1);
+	stats.AddConnectedSockets(-1);
 }
 
 void
@@ -261,14 +255,14 @@ Worker::HandleHangup(const Event::Item& item) {
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
 	if (socket->GetConnected()) {
-		++total_requests;
-		++failed_requests;
-		--connected_sockets;
+		stats.AddTotalRequests(1);
+		stats.AddFailedRequests(1);
+		stats.AddConnectedSockets(-1);
 	}
 
 	delete(state);
 	delete(socket);
-	--open_sockets;
+	stats.AddOpenSockets(-1);
 }
 
 void
@@ -281,14 +275,14 @@ Worker::HandleError(const Event::Item& item) {
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
 	if (socket->GetConnected()) {
-		++total_requests;
-		++failed_requests;
-		--connected_sockets;
+		stats.AddTotalRequests(1);
+		stats.AddFailedRequests(1);
+		stats.AddConnectedSockets(-1);
 	}
 
 	delete(state);
 	delete(socket);
-	--open_sockets;
+	stats.AddOpenSockets(-1);
 }
 
 void

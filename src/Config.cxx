@@ -44,12 +44,17 @@ Config::SetDelay(int delay) {
 }
 
 int
-Config::GetConcurrent() const {
-	return concurrent;
+Config::GetConcurrentConnections() const {
+	return connections;
 }
 void
-Config::SetConcurrent(int concurrent) {
-	this->concurrent = concurrent;
+Config::SetConcurrentConnections(int connections) {
+	this->connections = connections;
+}
+
+int
+Config::GetConnectionsPerThread() const {
+	return GetConcurrentConnections() / GetThreads();
 }
 
 bool

@@ -29,10 +29,9 @@ bool         opt_version     = false;
 bool         opt_fastmode    = false;
 int          opt_timelimit   = -1;
 bool         opt_keepalive   = false;
-int          opt_concurrent  = 64;
+int          opt_connections = 64;
 unsigned int opt_iterations  = 0;
 bool         opt_validation  = false;
-unsigned int opt_connections = 0;
 char const*  options         = "eqvVkdfc:i:t:s:w:T:";
 char const*  version_text    = "Program Version: %s\n";
 char const*  help_text       = "Usage: %s [-qvVkf] [-citTw int] "
@@ -68,7 +67,7 @@ CheckOptions(int argc, char **argv) {
 			case 'k': opt_keepalive   = true;           break;
 			case 'f': opt_fastmode    = true;           break;
 			case 'd': opt_validation  = true;           break;
-			case 'c': opt_concurrent  = atoi(optarg);   break;
+			case 'c': opt_connections = atoi(optarg);   break;
 			case 'i': opt_iterations  = atoi(optarg);   break;
 			case 't': opt_timelimit   = atoi(optarg);   break;
 			case 'T': opt_threads     = atoi(optarg);   break;
@@ -118,7 +117,7 @@ int main(int argc, char **argv) {
 
 	//build config
 	Punisher::Config* config = new Punisher::Config();
-	config->SetConcurrent(opt_concurrent);
+	config->SetConcurrentConnections(opt_connections);
 	config->SetIterations(opt_iterations);
 	config->SetTimelimit(opt_timelimit);
 	config->SetKeepalive(opt_keepalive);

@@ -32,6 +32,9 @@ class Statistics {
 		Statistics();
 		virtual ~Statistics();
 
+		//display
+		void Print();
+
 		//sockets
 		inline int GetOpenSockets() const {
 			return open_sockets;

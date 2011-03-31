@@ -24,15 +24,15 @@ namespace Punisher {
 
 class Worker : public Thread, public Event::IHandler {
 	private:
-		int                          open_sockets;
-		int                          connected_sockets;
+		//int                          open_sockets;
+		//int                          connected_sockets;
 		size_t                       iterations;
 		uint64_t                     next_request;
-		uint64_t                     total_requests;
-		uint64_t                     failed_requests;
+		//uint64_t                     total_requests;
+		//uint64_t                     failed_requests;
 		const Config*                config;
 		Statistics                   stats;
-		Event::PollManager          manager;
+		Event::PollManager           manager;
 		std::deque<M::String>        errors;
 		std::deque<Network::Socket*> keepalives;
 
@@ -58,6 +58,7 @@ class Worker : public Thread, public Event::IHandler {
 		void HandleAcceptable(const Event::Item& item);
 
 		//statistics
+		/*
 		inline uint64_t GetRequests() const {
 			return total_requests;
 		}
@@ -73,6 +74,7 @@ class Worker : public Thread, public Event::IHandler {
 		inline int GetConnectedSockets() const {
 			return connected_sockets;
 		}
+		*/
 
 		inline int GetKeepaliveSockets() const {
 			return keepalives.size();

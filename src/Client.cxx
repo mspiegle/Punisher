@@ -165,10 +165,10 @@ Client::Start() {
 		for (i = workers.begin(); i != workers.end(); ++i) {
 
 			//collect (possibly) final stats for this thread
-			tmp_requests += (*i)->GetRequests();
-			tmp_failed_requests += (*i)->GetFailedRequests();
-			tmp_open_sockets += (*i)->GetOpenSockets();
-			tmp_connected_sockets += (*i)->GetConnectedSockets();
+			tmp_requests += (*i)->GetStatistics().GetTotalRequests();
+			tmp_failed_requests += (*i)->GetStatistics().GetFailedRequests();
+			tmp_open_sockets += (*i)->GetStatistics().GetOpenSockets();
+			tmp_connected_sockets += (*i)->GetStatistics().GetConnectedSockets();
 			tmp_keepalive_sockets += (*i)->GetKeepaliveSockets();
 			tmp_bytes_sent += (*i)->GetStatistics().GetBytesSent();
 			tmp_bytes_received += (*i)->GetStatistics().GetBytesReceived();
