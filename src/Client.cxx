@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 #include <vector>
-#include <time.h>
+#include <sys/time.h>
 #include <signal.h>
 #include <unistd.h>
 
@@ -127,12 +127,20 @@ Client::Start() {
 	int tmp_open_sockets = 0;
 	int tmp_connected_sockets = 0;
 	int tmp_keepalive_sockets = 0;
-	int joined_threads = 0;
+	int finished_threads = 0;
 	
 	//get the start time
+	/*
 	struct timespec start_time;
 	struct timespec now_time;
 	if (-1 == clock_gettime(CLOCK_REALTIME, &start_time)) {
+		Logging::Error("Client::Start(): Error getting start time");
+		return;
+	}
+	*/
+	struct timeval start_time;
+	struct timeval now_time;
+	if (-1 == gettimeofday(&start_time, NULL)) {
 		Logging::Error("Client::Start(): Error getting start time");
 		return;
 	}
@@ -173,15 +181,23 @@ Client::Start() {
 			tmp_bytes_sent += (*i)->GetStatistics().GetBytesSent();
 			tmp_bytes_received += (*i)->GetStatistics().GetBytesReceived();
 
-			//check for termination
-			if (0 == pthread_tryjoin_np((*i)->GetThread(), NULL)) {
-				++joined_threads;
+			// are we still running?
+			if (false == (*i)->GetRunning()) {
+				// TODO: we might want to check the return value
+				pthread_cancel((*i)->GetThread());
+				++finished_threads;
 			}
 		}
 
 		//get current time and display the aggregated stats
+		/*
 		if (-1 == clock_gettime(CLOCK_REALTIME, &now_time)) {
 			Logging::Error("Client::Start(): Error getting current time");
+			return;
+		}
+		*/
+		if (-1 == gettimeofday(&now_time, NULL)) {
+			Logging::Error("Client::Start(): Error getting start time");
 			return;
 		}
 		printf("%7ld %7" PRIu64 " %6d %6d %6d %8" PRIu64 " %8" PRIu64 \
@@ -205,7 +221,7 @@ Client::Start() {
 		tmp_bytes_received = 0;
 	
 		//if all the threads have been joined, we can exit
-		if (joined_threads >= config->GetThreads()) {
+		if (finished_threads >= config->GetThreads()) {
 			running = false;
 		}
 	}

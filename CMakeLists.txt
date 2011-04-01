@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Logging/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/Event/include)
 INCLUDE_DIRECTORIES(${Library_SOURCE_DIR}/M/include)
 INCLUDE_DIRECTORIES(${Punisher_SOURCE_DIR}/include)
+LINK_DIRECTORIES(/opt/local/lib)
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	INCLUDE_DIRECTORIES(/opt/local/include)
@@ -16,4 +17,4 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 INCLUDE(${Punisher_SOURCE_DIR}/src/SourceFiles.txt)
 ADD_EXECUTABLE(Punisher ${Punisher_SRC})
-TARGET_LINK_LIBRARIES(Punisher Library yaml pthread rt ssl)
+TARGET_LINK_LIBRARIES(Punisher Library yaml pthread crypto)
