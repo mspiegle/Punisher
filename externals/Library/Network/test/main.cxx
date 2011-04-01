@@ -11,23 +11,28 @@ int main() {
 	Network::TcpSocket sock;
 
 	//some basic tests
+	printf("We just created a TcpSocket.  Here's what we get:\n");
 	printf("FD [%d]\n", sock.GetFd());
 	printf("Notes [%p]\n", sock.GetNotes());
 	printf("Blocking [%s]\n", (true == sock.GetBlocking()) ? "true" : "false");
+	printf("\n");
 
 	//socket creation
+	printf("Calling Network::TcpSocket.Create(Network::Default)\n");
 	if (!sock.Create(Network::Default)) {
 		printf("Error creating socket\n");
 	}
 	printf("FD [%d]\n", sock.GetFd());
 	sock.Close();
+	printf("\n");
 
 
 	//test resolver
-	printf("Resolver Test\n");
+	printf("Resolver Test:\n");
 	Network::Host myhost;
 	if (myhost.SetName("nauticaltech.com")) {
-		printf("resolved to: %s\n", myhost.Address().ToString().ToCString());
+		printf("Resolve nauticaltech.com:: %s\n",
+		       myhost.Address().ToString().ToCString());
 	} else {
 		printf("SetName() failure\n");
 	}
@@ -49,16 +54,17 @@ int main() {
 	}
 	printf("Blocking: [%s]\n",
 	       (true == con_test_sock.GetBlocking()) ? "true" : "false");
-	Network::Host vm02;
-	vm02.SetPort(80);
-	if (vm02.SetName("vm02")) {
-		printf("Resolved vm02 to %s\n", vm02.Address().ToString().ToCString());
+	Network::Host nt;
+	nt.SetPort(80);
+	if (nt.SetName("nauticaltech.com")) {
+		printf("Resolved nt to %s\n", nt.Address().ToString().ToCString());
 	} else {
-		printf("Issue resolving vm02\n");
+		printf("Issue resolving nt\n");
 		return 0;
 	}
 	Network::network_error_t error;
-	if (Network::NETWORK_SUCCESS == (error = con_test_sock.Connect(vm02))) {
+	Logging::SetLogLevel(Logging::LEVEL_DEBUG);
+	if (Network::NETWORK_SUCCESS == (error = con_test_sock.Connect(nt))) {
 		printf("Sucessfully connected\n");
 	} else {
 		printf("Error [%d] Connecting\n", error);

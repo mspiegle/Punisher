@@ -156,6 +156,10 @@ Socket::SetReuseAddr(bool reuse) {
 bool
 Socket::Create(int domain, int type, int protocol) {
 	LOGGING_DEBUG("Socket::Create()");
+	//this checks to see if the socket was already created
+	if (-1 != fd) {
+		return false;
+	}
 	if (-1 == (fd = socket(domain, type, protocol))) {
 		return false;
 	}
