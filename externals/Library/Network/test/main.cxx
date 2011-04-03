@@ -49,7 +49,7 @@ int main() {
 	//test server connection
 	printf("Test server connection\n");
 	Network::TcpSocket con_test_sock;
-	if (!con_test_sock.SetBlocking(false)) {
+	if (!con_test_sock.SetBlocking(true)) {
 		printf("Error setting blocking\n");
 	}
 	printf("Blocking: [%s]\n",

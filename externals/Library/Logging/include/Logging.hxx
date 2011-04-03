@@ -85,7 +85,7 @@ void Critical(const char* message, ...);
 #if defined DEBUG
 #define LOGGING_DEBUG(x, ...) Logging::Debug(x, ## __VA_ARGS__)
 #else
-#define LOGGING_DEBUG(x, ...) 
+#define LOGGING_DEBUG(x, ...)
 #endif
 
 }
