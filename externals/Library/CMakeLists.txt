@@ -16,5 +16,7 @@ INCLUDE_DIRECTORIES(${Network_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Logging_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Event_SOURCE_DIR}/include)
 
+ADD_DEFINITIONS(-DDEBUG)
+
 ADD_LIBRARY(Library ${M_SRC} ${Logging_SRC} ${Network_SRC} ${Event_SRC})
 TARGET_LINK_LIBRARIES(Library M Logging Network Event)

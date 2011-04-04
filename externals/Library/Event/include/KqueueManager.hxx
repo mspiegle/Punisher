@@ -24,8 +24,8 @@ class KqueueManager : public Manager {
 	private:
 		int kfd;
 		struct kevent event_list[max_events];
-		uint32_t LocalToSystem(uint32_t filter_in);
-		uint32_t SystemToLocal(uint32_t filter_in);
+		int16_t LocalToSystem(int16_t filter_in);
+		int16_t SystemToLocal(int16_t filter_in);
 
 
 	public:

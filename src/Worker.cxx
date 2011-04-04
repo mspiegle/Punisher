@@ -88,6 +88,8 @@ Worker::ThreadMain() {
 			if (!socket->SetBlocking(false)) {
 				Logging::Error("Worker::ThreadMain(): Error during SetBlocking()");
 			}
+
+			LOGGING_DEBUG("Worker::ThreadMain(): Calling socket->SetReuseAddr()");
 			if (!socket->SetReuseAddr(true)) {
 				Logging::Error("Worker::ThreadMain(): Error during SetReuseAddr()");
 			}

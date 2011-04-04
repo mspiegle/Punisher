@@ -141,13 +141,17 @@ Socket::SetBlocking(bool blocking) {
 
 bool
 Socket::SetReuseAddr(bool reuse) {
+	LOGGING_DEBUG("Socket::SetReuseAddr()");
 	int ra;
 	if (reuse) {
 		ra = 1;
 	} else {
 		ra = 0;
 	}
+	int error;
 	if (-1 == setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &ra, sizeof(&ra))) {
+		error = errno;
+		Logging::Error("Socket::SetReuseAddr(): setsockopt(): %s", strerror(errno));
 		return false;
 	}
 	return true;
