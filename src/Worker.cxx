@@ -83,6 +83,7 @@ Worker::ThreadMain() {
 			//if there were no keepalive sockets available...
 			if (NULL == socket) {
 				socket = request->CreateSocket();
+				stats.AddOpenSockets(1);
 			}
 
 			if (!socket->SetBlocking(false)) {
@@ -101,9 +102,21 @@ Worker::ThreadMain() {
 			if (NULL != request->GetValidator()) {
 				state->GetValidator() = request->GetValidator()->CreateValidator();
 			}
+		
+			// do the initial connect (which probably returns EWOULDBLOCK)
+			// but we'll check just to make sure
+			Network::network_error_t status;
+			if (Network::NETWORK_SUCCESS == (status = state->Connect(socket))) {
+				stats.AddConnectedSockets(1);
+			}
 
+			if (Network::NETWORK_ERROR == status) {
+				Logging::Error("Worker::ThreadMain(): error connecting socket");
+				continue;
+			}
+			
+			// stick the socket in the queue
 			manager.AddSocket(socket, Event::Writeable, (void*)state);
-			stats.AddOpenSockets(1);
 		}
 
 		//TODO: I think there's a way to factor some of this out into the
@@ -118,15 +131,19 @@ Worker::ThreadMain() {
 			
 			//If the socket isn't connected, you'll get EPOLLHUP regardless
 			if (item.IsHangup() && item.GetSocket()->GetConnected()) {
+				LOGGING_DEBUG("Worker::ThreadMain(): item is hangup");
 				HandleHangup(item);
 			} else
 			if (item.IsError()) {
+				LOGGING_DEBUG("Worker::ThreadMain(): item is error");
 				HandleError(item);
 			} else
 			if (item.IsWriteable()) {
+				LOGGING_DEBUG("Worker::ThreadMain(): item is writeable");
 				HandleWriteable(item);
 			} else
 			if (item.IsReadable()) {
+				LOGGING_DEBUG("Worker::ThreadMain(): item is hangup");
 				HandleReadable(item);
 			} else {
 				Logging::Error("Odd event received");

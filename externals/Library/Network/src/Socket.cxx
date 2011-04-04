@@ -233,6 +233,11 @@ Socket::Connect(const struct sockaddr* addr, socklen_t size) {
 			LOGGING_DEBUG("Socket::Connect(): Connect would block");
 			return NETWORK_WOULDBLOCK;
 		}
+		if (errno == EISCONN) {
+			LOGGING_DEBUG("Socket::Connect(): Socket is connected");
+			connected = true;
+			return NETWORK_SUCCESS;
+		}
 		Logging::Error("Socket::Connect(): %s", strerror(errno));
 		return NETWORK_ERROR;
 	}
