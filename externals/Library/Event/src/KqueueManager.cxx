@@ -45,8 +45,6 @@ KqueueManager::Wait(int timeout) {
 	              timeout, num_events);
 	for (int x = 0; x < num_events; x++) {
 		Item item;
-		// TODO: event_list[x].* is implementation-specific.  Figure out a way
-		// to factor this for multiple platforms.
 		item.SetFilter(SystemToLocal(event_list[x].filter));
 		PrivateData* data = static_cast<PrivateData*>(event_list[x].udata);
 		item.SetUserData(data->GetUserData());
