@@ -13,7 +13,7 @@
 #include "Item.hxx"
 #include "Request.hxx"
 #include "Logging.hxx"
-#include "State.hxx"
+#include "Protocol.hxx"
 #include "Network.hxx"
 #include "Socket.hxx"
 #include "Statistics.hxx"
@@ -95,18 +95,18 @@ Worker::ThreadMain() {
 				Logging::Error("Worker::ThreadMain(): Error during SetReuseAddr()");
 			}
 
-			//create a state that matches the type of the request
-			State* state = request->CreateState();
+			//create a protocol that matches the type of the request
+			Protocol* protocol = request->CreateProtocol();
 
-			//create a state validator that matches the type of the request validator
+			//create protocol validator that matches request validator
 			if (NULL != request->GetValidator()) {
-				state->GetValidator() = request->GetValidator()->CreateValidator();
+				protocol->SetValidator(request->GetValidator()->CreateValidator());
 			}
 		
 			// do the initial connect (which probably returns EWOULDBLOCK)
 			// but we'll check just to make sure
 			Network::network_error_t status;
-			if (Network::NETWORK_SUCCESS == (status = state->Connect(socket))) {
+			if (Network::NETWORK_SUCCESS == (status = protocol->Connect(socket))) {
 				stats.AddConnectedSockets(1);
 			}
 
@@ -116,7 +116,7 @@ Worker::ThreadMain() {
 			}
 			
 			// stick the socket in the queue
-			manager.AddSocket(socket, Event::Writeable, (void*)state);
+			manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 		}
 
 		//TODO: I think there's a way to factor some of this out into the
@@ -164,16 +164,16 @@ Worker::HandleReadable(const Event::Item& item) {
 	
 	Network::Socket* socket = item.GetSocket();
 
-	State* state;
-	state = static_cast<State*>(item.GetUserData());
+	Protocol* protocol;
+	protocol = static_cast<Protocol*>(item.GetUserData());
 
-	state_result_t ret = state->ReadData(socket);
+	protocol_result_t ret = protocol->ReadData(socket);
 
 	if (true == ret.success) {
 		stats.AddBytesReceived(ret.bytes_transferred);
-		switch (ret.mode) {
-			case MODE_DONE:
-				delete(state);
+		switch (ret.state) {
+			case STATE_DONE:
+				delete(protocol);
 
 				//handle keepalives
 				LOGGING_DEBUG("Worker::HandleReadable(): testing keepalive");
@@ -189,12 +189,12 @@ Worker::HandleReadable(const Event::Item& item) {
 				stats.AddTotalRequests(1);
 				break;
 
-			case MODE_READ:
-				manager.AddSocket(socket, Event::Readable, (void*)state);
+			case STATE_READ:
+				manager.AddSocket(socket, Event::Readable, (void*)protocol);
 				break;
 
-			case MODE_WRITE:
-				manager.AddSocket(socket, Event::Writeable, (void*)state);
+			case STATE_WRITE:
+				manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 				break;
 
 			default:
@@ -203,9 +203,9 @@ Worker::HandleReadable(const Event::Item& item) {
 		return;
 	}
 
-	LOGGING_DEBUG("Worker::HandleReadable(): state returned failure");
-	errors.push_front(state->GetError());
-	delete(state);
+	LOGGING_DEBUG("Worker::HandleReadable(): protocol returned failure");
+	errors.push_front(protocol->GetError());
+	delete(protocol);
 	delete(socket);
 	stats.AddConnectedSockets(-1);
 	stats.AddOpenSockets(-1);
@@ -219,46 +219,46 @@ Worker::HandleWriteable(const Event::Item& item) {
 
 	Network::Socket* socket = item.GetSocket();
 
-	State* state;
-	state = static_cast<State*>(item.GetUserData());
+	Protocol* protocol;
+	protocol = static_cast<Protocol*>(item.GetUserData());
 
 	if (socket->GetConnected()) {
 		//already connected.  we can write data
 		LOGGING_DEBUG("Worker::HandleWriteable(): Already connected, sending...");
 
-		state_result_t ret = state->WriteData(socket);
+		protocol_result_t ret = protocol->WriteData(socket);
 
-		if ((true == ret.success) && (MODE_READ == ret.mode)) {
+		if ((true == ret.success) && (STATE_READ == ret.state)) {
 			stats.AddBytesSent(ret.bytes_transferred);
-			manager.AddSocket(socket, Event::Readable, (void*)state);
+			manager.AddSocket(socket, Event::Readable, (void*)protocol);
 			return;
 		}
 
-		Logging::Error("Worker::HandleWriteable(): state result unsuccessful");
+		Logging::Error("Worker::HandleWriteable(): protocol result unsuccessful");
 		if (false == ret.success) {
-			errors.push_front(state->GetError());
+			errors.push_front(protocol->GetError());
 		}
 		stats.AddTotalRequests(1);
 		stats.AddFailedRequests(1);
 	} else {
 		//we'll handle the connect right here
 		Network::network_error_t status;
-		if (Network::NETWORK_SUCCESS == (status = state->Connect(socket))) {
+		if (Network::NETWORK_SUCCESS == (status = protocol->Connect(socket))) {
 			stats.AddConnectedSockets(1);
-			manager.AddSocket(socket, Event::Writeable, (void*)state);
+			manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 			return;
 		}
 
 		if (Network::NETWORK_WOULDBLOCK == status) {
 			LOGGING_DEBUG("Worker::HandleWriteable(): The connect would block");
-			manager.AddSocket(socket, Event::Writeable, (void*)state);
+			manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 			return ;
 		}
 		
 		Logging::Error("Worker::HandleWriteable(): Error during Connect");
 	}
 
-	delete(state);
+	delete(protocol);
 	delete(socket);
 	stats.AddOpenSockets(-1);
 	stats.AddConnectedSockets(-1);
@@ -269,7 +269,7 @@ Worker::HandleHangup(const Event::Item& item) {
 	Logging::Error("HandleHangup()");
 
 	Network::Socket* socket = item.GetSocket();
-	State* state = static_cast<State*>(item.GetUserData());
+	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
 
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
@@ -279,7 +279,7 @@ Worker::HandleHangup(const Event::Item& item) {
 		stats.AddConnectedSockets(-1);
 	}
 
-	delete(state);
+	delete(protocol);
 	delete(socket);
 	stats.AddOpenSockets(-1);
 }
@@ -289,7 +289,7 @@ Worker::HandleError(const Event::Item& item) {
 	Logging::Error("HandleError()");
 
 	Network::Socket* socket = item.GetSocket();
-	State* state = static_cast<State*>(item.GetUserData());
+	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
 
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
@@ -299,7 +299,7 @@ Worker::HandleError(const Event::Item& item) {
 		stats.AddConnectedSockets(-1);
 	}
 
-	delete(state);
+	delete(protocol);
 	delete(socket);
 	stats.AddOpenSockets(-1);
 }

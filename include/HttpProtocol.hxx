@@ -3,13 +3,13 @@
  * by Michael Spiegle
  * 10.19.09
  *
- * HttpState.hxx
+ * HttpProtocol.hxx
  */
 
-#ifndef _PUNISHER_HTTPSTATE_HXX_
-#define _PUNISHER_HTTPSTATE_HXX_
+#ifndef _PUNISHER_HTTPPROTOCOL_HXX_
+#define _PUNISHER_HTTPPROTOCOL_HXX_
 
-#include "State.hxx"
+#include "Protocol.hxx"
 #include "HttpStatus.hxx"
 #include "HttpVersion.hxx"
 #include "String.hxx"
@@ -44,7 +44,7 @@ static const size_t buffer_size = 4096;
 
 #define HEADER_MAP std::map<M::String, M::String>
 
-class HttpState : public State {
+class HttpProtocol: public Protocol {
 	private:
 		http_state_t state;
 		HEADER_MAP   header_map;
@@ -59,13 +59,13 @@ class HttpState : public State {
 		bool         keepalive;
 
 	public:
-		HttpState();
-		HttpState(const HttpRequest* request);
-		~HttpState();
+		HttpProtocol();
+		HttpProtocol(const HttpRequest* request);
+		~HttpProtocol();
 		void Init();
 
-		state_result_t ReadData(Network::Socket* socket);
-		state_result_t WriteData(Network::Socket* socket);
+		protocol_result_t ReadData(Network::Socket* socket);
+		protocol_result_t WriteData(Network::Socket* socket);
 
 		Network::network_error_t Connect(Network::Socket* socket);
 

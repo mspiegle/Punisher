@@ -7,7 +7,7 @@
  */
 
 #include "HttpRequest.hxx"
-#include "HttpState.hxx"
+#include "HttpProtocol.hxx"
 #include "Logging.hxx"
 #include "TcpSocket.hxx"
 
@@ -184,9 +184,9 @@ HttpRequest::GetRequest() const {
 }
 */
 
-HttpState*
-HttpRequest::CreateState() const {
-	return new HttpState(this);
+HttpProtocol*
+HttpRequest::CreateProtocol() const {
+	return new HttpProtocol(this);
 }
 
 Network::Socket*

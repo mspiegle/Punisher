@@ -3,10 +3,10 @@
  * by Michael Spiegle
  * 10.19.09
  *
- * HttpState.cxx
+ * HttpProtocol.cxx
  */
 
-#include "HttpState.hxx"
+#include "HttpProtocol.hxx"
 #include "Logging.hxx"
 #include "HttpRequest.hxx"
 #include "Socket.hxx"
@@ -20,7 +20,7 @@
 namespace Punisher {
 
 void
-HttpState::Init() {
+HttpProtocol::Init() {
 	state = SEND_REQUEST;
 	proto_content_length = 0;
 	parsed_content_length = 0;
@@ -28,12 +28,12 @@ HttpState::Init() {
 	keepalive = false;
 }
 
-HttpState::HttpState() {
+HttpProtocol::HttpProtocol() {
 	Init();
 }
 
-HttpState::HttpState(const HttpRequest* request) {
-	LOGGING_DEBUG("HttpState::HttpState()");
+HttpProtocol::HttpProtocol(const HttpRequest* request) {
+	LOGGING_DEBUG("HttpProtocol::HttpProtocol()");
 	Init();
 
 	//TODO: Figure out why I need a cast, and can't use a safe cast
@@ -41,41 +41,41 @@ HttpState::HttpState(const HttpRequest* request) {
 
 	//if this is an HTTP/1.1 request, we can try using keepalive
 	if (request->Version().Get() == HTTP_11) {
-		LOGGING_DEBUG("HttpState::HttpState(): Allow keepalives for HTTP/1.1");
+		LOGGING_DEBUG("HttpProtocol::HttpProtocol(): enable HTTP/1.1 keepalive");
 		keepalive = true;
 	}
 }
 
-HttpState::~HttpState() {
+HttpProtocol::~HttpProtocol() {
 }
 
-state_result_t
-HttpState::ReadData(Network::Socket* socket) {
-	LOGGING_DEBUG("HttpState::ReadData()");
+protocol_result_t
+HttpProtocol::ReadData(Network::Socket* socket) {
+	LOGGING_DEBUG("HttpProtocol::ReadData()");
 
 	unsigned char buffer[4096];
 	size_t buffer_size = sizeof(buffer);
-	state_result_t ret;
+	protocol_result_t ret;
 	switch (socket->Read(buffer, &buffer_size)) {
 		case Network::NETWORK_SUCCESS:
 			break;
 
 		case Network::NETWORK_ERROR:
-			Logging::Info("HttpState::ReadData(): socket read failed");
+			Logging::Info("HttpProtocol::ReadData(): socket read failed");
 			ret.success = false;
 			return ret;
 			break;
 
 		case Network::NETWORK_WOULDBLOCK:
 			ret.success = true;
-			ret.mode = MODE_READ;
+			ret.state = STATE_READ;
 			ret.bytes_transferred = 0;
 			return ret;
 			break;
 
 		default:
 			//TODO: shouldn't we return from here?
-			Logging::Error("HttpState::ReadData(): Bad return from Socket::Read()");
+			Logging::Error("HttpProtocol::ReadData(): Bad return from Socket::Read()");
 			break;
 	}
 
@@ -91,7 +91,7 @@ HttpState::ReadData(Network::Socket* socket) {
 		//make sure we don't exceed our local buffer
 		if (iter >= sizeof(buffer)) {
 			//exceeding our buffer usually means there was a protocol error
-			Logging::Error("HttpState::ReadData(): Error reading protocol");
+			Logging::Error("HttpProtocol::ReadData(): Error reading protocol");
 			state = HTTP_DONE;
 			error = "Protocol Error: URL[";
 			error += ((HttpRequest*)request)->GetPath();
@@ -108,7 +108,7 @@ HttpState::ReadData(Network::Socket* socket) {
 						state = NEED_VERSION;
 						iter = 0;
 					} else {
-						Logging::Error("HttpState::ReadData(): Incorrect protocol");
+						Logging::Error("HttpProtocol::ReadData(): Incorrect protocol");
 						state = HTTP_DONE;
 						error = "Protocol is not HTTP";
 						ret.success = false;
@@ -127,7 +127,7 @@ HttpState::ReadData(Network::Socket* socket) {
 						state = NEED_STATUS_CODE;
 						iter = 0;
 					} else {
-						Logging::Error("HttpState::ReadData(): Invalid version");
+						Logging::Error("HttpProtocol::ReadData(): Invalid version");
 						state = HTTP_DONE;
 						error = "Unknown HTTP version";
 						ret.success = false;
@@ -146,7 +146,7 @@ HttpState::ReadData(Network::Socket* socket) {
 						state = NEED_STATUS_TXT;
 						iter = 0;
 					} else {
-						Logging::Error("HttpState::ReadData(): Invalid status code");
+						Logging::Error("HttpProtocol::ReadData(): Invalid status code");
 						state = HTTP_DONE;
 						error = "Unknown HTTP status code";
 						ret.success = false;
@@ -188,7 +188,7 @@ HttpState::ReadData(Network::Socket* socket) {
 					}
 					if (0 == strncmp("Connection", header_key.ToCString(), 10)) {
 						if (0 == strncmp("close", temp, 5)) {
-							LOGGING_DEBUG("HttpState::ReadData(): keepalive disabled");
+							LOGGING_DEBUG("HttpProtocol::ReadData(): keepalive disabled");
 							keepalive = false;
 						}
 					}
@@ -219,7 +219,7 @@ HttpState::ReadData(Network::Socket* socket) {
 				//this gives us a chance to verify that we got the necessary headers
 				//currently, we're only checking for content_length
 				if (proto_content_length < 1) {
-					LOGGING_DEBUG("HttpState::ReadData(): Missing Content-Length");
+					LOGGING_DEBUG("HttpProtocol::ReadData(): Missing Content-Length");
 					state = HTTP_DONE;
 					error = "No Content-Length header provided";
 					ret.success = false;
@@ -264,7 +264,7 @@ HttpState::ReadData(Network::Socket* socket) {
 					}
 					state = HTTP_DONE;
 					ret.success = true;
-					ret.mode = MODE_DONE;
+					ret.state = STATE_DONE;
 					ret.keepalive = keepalive;
 					return ret;
 				}
@@ -273,13 +273,13 @@ HttpState::ReadData(Network::Socket* socket) {
 
 			case HTTP_DONE:
 				ret.success = true;
-				ret.mode = MODE_DONE;
+				ret.state = STATE_DONE;
 				ret.keepalive = keepalive;
 				return ret;
 				break;
 
 			default:
-				Logging::Error("HttpState::ReadData(): Invalid http state");
+				Logging::Error("HttpProtocol::ReadData(): Invalid http state");
 				state = HTTP_DONE;
 				error = "Unknown error";
 				ret.success = false;
@@ -288,14 +288,14 @@ HttpState::ReadData(Network::Socket* socket) {
 		}
 	}
 	ret.success = true;
-	ret.mode = MODE_READ;
+	ret.state = STATE_READ;
 	return ret;
 }
 
-state_result_t
-HttpState::WriteData(Network::Socket* socket) {
+protocol_result_t
+HttpProtocol::WriteData(Network::Socket* socket) {
 	size_t data_len = 0;
-	state_result_t ret;
+	protocol_result_t ret;
 
 	if (SEND_REQUEST == state) {
 		M::String buffer;
@@ -319,7 +319,7 @@ HttpState::WriteData(Network::Socket* socket) {
 		if (Network::NETWORK_SUCCESS == socket->Write(data, &data_len)) {
 			state = NEED_PROTO;
 			ret.success = true;
-			ret.mode = MODE_READ;
+			ret.state = STATE_READ;
 			ret.bytes_transferred = data_len;
 			return ret;
 		}
@@ -330,7 +330,7 @@ HttpState::WriteData(Network::Socket* socket) {
 }
 
 Network::network_error_t
-HttpState::Connect(Network::Socket* socket) {
+HttpProtocol::Connect(Network::Socket* socket) {
 	if (NULL != socket) {
 		const Network::Host& host = request->GetHost();
 		return static_cast<Network::TcpSocket*>(socket)->Connect(host);
@@ -339,7 +339,7 @@ HttpState::Connect(Network::Socket* socket) {
 }
 
 const HttpRequest*
-HttpState::GetRequest() const {
+HttpProtocol::GetRequest() const {
 	return static_cast<const HttpRequest*>(this->request);
 }
 

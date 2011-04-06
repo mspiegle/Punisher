@@ -12,7 +12,7 @@
 #include "Request.hxx"
 #include "HttpMethod.hxx"
 #include "HttpVersion.hxx"
-#include "HttpState.hxx"
+#include "HttpProtocol.hxx"
 #include "String.hxx"
 
 #include <map>
@@ -56,7 +56,7 @@ class HttpRequest : public Request {
 
 		//const M::String& GetRequest() const;
 		//bool Process();
-		HttpState* CreateState() const;
+		HttpProtocol* CreateProtocol() const;
 		Network::Socket* CreateSocket() const;
 
 		bool SetField(int field, const char* value);
