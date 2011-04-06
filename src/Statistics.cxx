@@ -27,4 +27,16 @@ void
 Statistics::Print() {
 }
 
+Statistics&
+Statistics::operator+=(const Statistics& arg) {
+	this->open_sockets += arg.GetOpenSockets();
+	this->connected_sockets += arg.GetConnectedSockets();
+	this->total_requests += arg.GetTotalRequests();
+	this->failed_requests += arg.GetFailedRequests();
+	this->concurrent_requests += arg.GetConcurrentRequests();
+	this->bytes_sent += arg.GetBytesSent();
+	this->bytes_received += arg.GetBytesReceived();
+	return *this;
+}
+
 }
