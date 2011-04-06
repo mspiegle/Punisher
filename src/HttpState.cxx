@@ -61,6 +61,7 @@ HttpState::ReadData(Network::Socket* socket) {
 			break;
 
 		case Network::NETWORK_ERROR:
+			Logging::Info("HttpState::ReadData(): socket read failed");
 			ret.success = false;
 			return ret;
 			break;
@@ -107,7 +108,7 @@ HttpState::ReadData(Network::Socket* socket) {
 						state = NEED_VERSION;
 						iter = 0;
 					} else {
-						LOGGING_DEBUG("HttpState::ReadData(): Incorrect protocol");
+						Logging::Error("HttpState::ReadData(): Incorrect protocol");
 						state = HTTP_DONE;
 						error = "Protocol is not HTTP";
 						ret.success = false;
@@ -182,7 +183,7 @@ HttpState::ReadData(Network::Socket* socket) {
 				if (buffer[x] == '\n') {
 					//all we really care about is the content-length for now...
 					temp[iter] = '\0';
-					if (0 == strncmp("Content-Leng.hxx", header_key.ToCString(), 15)) {
+					if (0 == strncmp("Content-Length", header_key.ToCString(), 15)) {
 						proto_content_length = strtoll(temp, NULL, 10);
 					}
 					if (0 == strncmp("Connection", header_key.ToCString(), 10)) {
@@ -218,7 +219,7 @@ HttpState::ReadData(Network::Socket* socket) {
 				//this gives us a chance to verify that we got the necessary headers
 				//currently, we're only checking for content_length
 				if (proto_content_length < 1) {
-					LOGGING_DEBUG("HttpState::ReadData(): Missing Content-Leng.hxx");
+					LOGGING_DEBUG("HttpState::ReadData(): Missing Content-Length");
 					state = HTTP_DONE;
 					error = "No Content-Length header provided";
 					ret.success = false;
