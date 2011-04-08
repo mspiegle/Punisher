@@ -34,6 +34,7 @@ class Statistics {
 
 		//operators
 		Statistics& operator+=(const Statistics& arg);
+		Statistics& operator=(const Statistics& arg);
 
 		//display
 		void Print();
