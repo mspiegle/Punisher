@@ -18,8 +18,7 @@ IF (NOT TARGET M)
 	ADD_SUBDIRECTORY(externals/M ${CMAKE_CURRENT_BINARY_DIR}/M)
 ENDIF (NOT TARGET M)
 
-# libpunisher
-ADD_SUBDIRECTORY(libpunisher)
+# punisher sources
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
 
@@ -39,7 +38,6 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # CFLAGS
 ADD_DEFINITIONS(-DDEBUG)
 
-INCLUDE(${Punisher_SOURCE_DIR}/libpunisher/SourceFiles.txt)
 INCLUDE(${Punisher_SOURCE_DIR}/src/SourceFiles.txt)
 INCLUDE(${Punisher_SOURCE_DIR}/test/SourceFiles.txt)
 

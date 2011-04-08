@@ -1,1 +1,0 @@
-FILE(GLOB Punisher_SRC ${Punisher_SOURCE_DIR}/libpunisher/*)

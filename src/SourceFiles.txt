@@ -1,1 +1,16 @@
-FILE(GLOB Punisher_MAIN ${Punisher_SOURCE_DIR}/src/*)
+FILE(GLOB Punisher_SRC
+	${Punisher_SOURCE_DIR}/src/Client.cxx
+	${Punisher_SOURCE_DIR}/src/Config.cxx
+	${Punisher_SOURCE_DIR}/src/Http*.cxx
+	${Punisher_SOURCE_DIR}/src/Md5Validator.cxx
+	${Punisher_SOURCE_DIR}/src/Protocol.cxx
+	${Punisher_SOURCE_DIR}/src/Request.cxx
+	${Punisher_SOURCE_DIR}/src/Statistics.cxx
+	${Punisher_SOURCE_DIR}/src/Thread.cxx
+	${Punisher_SOURCE_DIR}/src/Validator.cxx
+	${Punisher_SOURCE_DIR}/src/Worker.cxx
+)
+
+FILE(GLOB Punisher_MAIN
+	${Punisher_SOURCE_DIR}/src/main.cxx
+)
