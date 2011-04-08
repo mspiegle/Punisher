@@ -74,8 +74,6 @@ Client::Stop() {
 		(*i)->SetRunning(false);
 	}
 
-	//wait for an interval
-	//sleep(config->GetDelay());
 	//wait for a second
 	sleep(1);
 
@@ -119,25 +117,11 @@ Client::Start() {
 	//start a forever loop with counter for header display
 	int count;
 	std::vector<Worker*>::const_iterator i;
-	uint64_t tmp_requests = 0;
-	uint64_t tmp_failed_requests = 0;
-	uint64_t tmp_bytes_sent = 0;
-	uint64_t tmp_bytes_received = 0;
+	Statistics tmp_stats;
 	uint64_t last_requests = 0;
-	int tmp_open_sockets = 0;
-	int tmp_connected_sockets = 0;
-	int tmp_keepalive_sockets = 0;
 	int finished_threads = 0;
-	
-	//get the start time
-	/*
-	struct timespec start_time;
-	struct timespec now_time;
-	if (-1 == clock_gettime(CLOCK_REALTIME, &start_time)) {
-		Logging::Error("Client::Start(): Error getting start time");
-		return;
-	}
-	*/
+
+	// get start time
 	struct timeval start_time;
 	struct timeval now_time;
 	if (-1 == gettimeofday(&start_time, NULL)) {
@@ -173,13 +157,7 @@ Client::Start() {
 		for (i = workers.begin(); i != workers.end(); ++i) {
 
 			//collect (possibly) final stats for this thread
-			tmp_requests += (*i)->GetStatistics().GetTotalRequests();
-			tmp_failed_requests += (*i)->GetStatistics().GetFailedRequests();
-			tmp_open_sockets += (*i)->GetStatistics().GetOpenSockets();
-			tmp_connected_sockets += (*i)->GetStatistics().GetConnectedSockets();
-			tmp_keepalive_sockets += (*i)->GetKeepaliveSockets();
-			tmp_bytes_sent += (*i)->GetStatistics().GetBytesSent();
-			tmp_bytes_received += (*i)->GetStatistics().GetBytesReceived();
+			tmp_stats += (*i)->GetStatistics();
 
 			// are we still running?
 			if (false == (*i)->GetRunning()) {
@@ -190,12 +168,6 @@ Client::Start() {
 		}
 
 		//get current time and display the aggregated stats
-		/*
-		if (-1 == clock_gettime(CLOCK_REALTIME, &now_time)) {
-			Logging::Error("Client::Start(): Error getting current time");
-			return;
-		}
-		*/
 		if (-1 == gettimeofday(&now_time, NULL)) {
 			Logging::Error("Client::Start(): Error getting start time");
 			return;
@@ -203,22 +175,16 @@ Client::Start() {
 		printf("%7ld %7" PRIu64 " %6d %6d %6d %8" PRIu64 " %8" PRIu64 \
 		       " %12" PRIu64 " %8" PRIu64 "\n",
 		       now_time.tv_sec - start_time.tv_sec,
-		       (tmp_requests - last_requests) / config->GetDelay(),
-		       tmp_open_sockets,
-		       tmp_connected_sockets,
-		       tmp_keepalive_sockets,
-		       tmp_bytes_sent,
-					 tmp_bytes_received,
-		       tmp_requests,
-		       tmp_failed_requests);
-		last_requests = tmp_requests;
-		tmp_requests = 0;
-		tmp_failed_requests = 0;
-		tmp_open_sockets = 0;
-		tmp_connected_sockets = 0;
-		tmp_keepalive_sockets = 0;
-		tmp_bytes_sent = 0;
-		tmp_bytes_received = 0;
+		       (tmp_stats.GetTotalRequests() - last_requests) / config->GetDelay(),
+		       tmp_stats.GetOpenSockets(),
+		       tmp_stats.GetConnectedSockets(),
+		       tmp_stats.GetKeepaliveSockets(),
+		       tmp_stats.GetBytesSent(),
+		       tmp_stats.GetBytesReceived(),
+		       tmp_stats.GetTotalRequests(),
+		       tmp_stats.GetFailedRequests());
+		last_requests = tmp_stats.GetTotalRequests();
+		tmp_stats.Reset();
 	
 		//if all the threads have been joined, we can exit
 		if (finished_threads >= config->GetThreads()) {

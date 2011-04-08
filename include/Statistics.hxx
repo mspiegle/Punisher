@@ -18,6 +18,7 @@ class Statistics {
 		//sockets
 		int open_sockets;
 		int connected_sockets;
+		int keepalive_sockets;
 
 		//requests
 		uint64_t total_requests;
@@ -36,8 +37,9 @@ class Statistics {
 		Statistics& operator+=(const Statistics& arg);
 		Statistics& operator=(const Statistics& arg);
 
-		//display
+		// misc
 		void Print();
+		void Reset();
 
 		//sockets
 		inline int GetOpenSockets() const {
@@ -62,6 +64,18 @@ class Statistics {
 
 		inline int AddConnectedSockets(int connected_sockets) {
 			return this->connected_sockets += connected_sockets;
+		}
+
+		inline int GetKeepaliveSockets() const {
+			return keepalive_sockets;
+		}
+
+		inline void SetKeepaliveSockets(int keepalive_sockets) {
+			this->keepalive_sockets = keepalive_sockets;
+		}
+
+		inline int AddKeepaliveSockets(int keepalive_sockets) {
+			return this->keepalive_sockets += keepalive_sockets;
 		}
 
 		//requests

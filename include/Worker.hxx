@@ -24,12 +24,8 @@ namespace Punisher {
 
 class Worker : public Thread, public Event::IHandler {
 	private:
-		//int                          open_sockets;
-		//int                          connected_sockets;
 		size_t                       iterations;
 		uint64_t                     next_request;
-		//uint64_t                     total_requests;
-		//uint64_t                     failed_requests;
 		const Config*                config;
 		Statistics                   stats;
 		Event::PollManager           manager;
@@ -56,25 +52,6 @@ class Worker : public Thread, public Event::IHandler {
 		void HandleHangup(const Event::Item& item);
 		void HandleError(const Event::Item& item);
 		void HandleAcceptable(const Event::Item& item);
-
-		//statistics
-		/*
-		inline uint64_t GetRequests() const {
-			return total_requests;
-		}
-
-		inline uint64_t GetFailedRequests() const {
-			return failed_requests;
-		}
-
-		inline int GetOpenSockets() const {
-			return open_sockets;
-		}
-
-		inline int GetConnectedSockets() const {
-			return connected_sockets;
-		}
-		*/
 
 		inline int GetKeepaliveSockets() const {
 			return keepalives.size();
