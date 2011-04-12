@@ -119,6 +119,7 @@ Client::Start() {
 	std::vector<Worker*>::const_iterator i;
 	Statistics tmp_stats;
 	uint64_t last_requests = 0;
+	uint64_t last_duration = 0;
 	int finished_threads = 0;
 
 	// get start time
@@ -141,7 +142,7 @@ Client::Start() {
 
 		//every 10 iterations, print the headers again
 		if (0 == (count % 10)) {
-			printf("\n%7s %7s %6s %6s %6s %8s %8s %12s %8s\n",
+			printf("\n%7s %6s %5s %5s %5s %8s %8s %6s %12s %8s\n",
 			       "SECS",
 			       "RPS",
 			       "OSKS",
@@ -149,6 +150,7 @@ Client::Start() {
 			       "KSKS",
 			       "SENT",
 			       "RECV",
+			       "MSEC",
 			       "TRQS",
 			       "FRQS");
 		}
@@ -172,8 +174,8 @@ Client::Start() {
 			Logging::Error("Client::Start(): Error getting start time");
 			return;
 		}
-		printf("%7ld %7" PRIu64 " %6d %6d %6d %8" PRIu64 " %8" PRIu64 \
-		       " %12" PRIu64 " %8" PRIu64 "\n",
+		printf("%7ld %6" PRIu64 " %5d %5d %5d %8" PRIu64 " %8" PRIu64 \
+		       "%7" PRIu64 " %12" PRIu64 " %8" PRIu64 "\n",
 		       now_time.tv_sec - start_time.tv_sec,
 		       (tmp_stats.GetTotalRequests() - last_requests) / config->GetDelay(),
 		       tmp_stats.GetOpenSockets(),
@@ -181,11 +183,14 @@ Client::Start() {
 		       tmp_stats.GetKeepaliveSockets(),
 		       tmp_stats.GetBytesSent(),
 		       tmp_stats.GetBytesReceived(),
+		       ((tmp_stats.GetRequestDuration() - last_duration) /
+					 (tmp_stats.GetTotalRequests() - last_requests)) / 1000,
 		       tmp_stats.GetTotalRequests(),
 		       tmp_stats.GetFailedRequests());
 		last_requests = tmp_stats.GetTotalRequests();
+		last_duration = tmp_stats.GetRequestDuration();
 		tmp_stats.Reset();
-	
+
 		//if all the threads have been joined, we can exit
 		if (finished_threads >= config->GetThreads()) {
 			running = false;

@@ -266,6 +266,10 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					ret.success = true;
 					ret.state = STATE_DONE;
 					ret.keepalive = keepalive;
+
+					// handle per-request time
+					gettimeofday(&end_time, NULL);
+
 					return ret;
 				}
 
@@ -275,6 +279,10 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				ret.success = true;
 				ret.state = STATE_DONE;
 				ret.keepalive = keepalive;
+
+				// handle per-request time
+				gettimeofday(&end_time, NULL);
+
 				return ret;
 				break;
 
@@ -331,10 +339,15 @@ HttpProtocol::WriteData(Network::Socket* socket) {
 
 Network::network_error_t
 HttpProtocol::Connect(Network::Socket* socket) {
+	// start our per-request timer
+	gettimeofday(&start_time, NULL);
+
+	// perform a protocol-specific Connect()
 	if (NULL != socket) {
 		const Network::Host& host = request->GetHost();
 		return static_cast<Network::TcpSocket*>(socket)->Connect(host);
 	}
+
 	return Network::NETWORK_ERROR;
 }
 

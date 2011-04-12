@@ -98,11 +98,6 @@ Worker::ThreadMain() {
 			//create a protocol that matches the type of the request
 			Protocol* protocol = request->CreateProtocol();
 
-			//create protocol validator that matches request validator
-			if (NULL != request->GetValidator()) {
-				protocol->SetValidator(request->GetValidator()->CreateValidator());
-			}
-		
 			// do the initial connect (which probably returns EWOULDBLOCK)
 			// but we'll check just to make sure
 			Network::network_error_t status;
@@ -110,11 +105,19 @@ Worker::ThreadMain() {
 				stats.AddConnectedSockets(1);
 			}
 
+			// if we get an error here, then something bad happened.  just delete it
 			if (Network::NETWORK_ERROR == status) {
 				Logging::Error("Worker::ThreadMain(): error connecting socket");
+				delete(socket);
+				delete(protocol);
 				continue;
 			}
-			
+
+			// create protocol validator that matches request validator
+			if (NULL != request->GetValidator()) {
+				protocol->SetValidator(request->GetValidator()->CreateValidator());
+			}
+
 			// stick the socket in the queue
 			manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 		}
@@ -173,6 +176,10 @@ Worker::HandleReadable(const Event::Item& item) {
 		stats.AddBytesReceived(ret.bytes_transferred);
 		switch (ret.state) {
 			case STATE_DONE:
+				// here, we collect per-request metrics
+				stats.AddRequestDuration(protocol->GetRequestDuration());
+
+				// clean up protocol
 				delete(protocol);
 
 				//handle keepalives

@@ -27,6 +27,7 @@ void Statistics::Reset() {
 	concurrent_requests = 0;
 	bytes_sent = 0;
 	bytes_received = 0;
+	request_duration = 0;
 }
 
 void
@@ -38,6 +39,7 @@ Statistics::Print() {
 	Logging::Info("concurrent_requests: %d", this->GetConcurrentRequests());
 	Logging::Info("bytes_sent: %d", this->GetBytesSent());
 	Logging::Info("bytes_received: %d", this->GetBytesReceived());
+	Logging::Info("request_duration: %d", this->GetRequestDuration());
 }
 
 Statistics&
@@ -49,6 +51,7 @@ Statistics::operator+=(const Statistics& arg) {
 	this->concurrent_requests += arg.GetConcurrentRequests();
 	this->bytes_sent += arg.GetBytesSent();
 	this->bytes_received += arg.GetBytesReceived();
+	this->request_duration += arg.GetRequestDuration();
 	return *this;
 }
 
@@ -61,6 +64,7 @@ Statistics::operator=(const Statistics& arg) {
 	this->concurrent_requests = arg.GetConcurrentRequests();
 	this->bytes_sent = arg.GetBytesSent();
 	this->bytes_received = arg.GetBytesReceived();
+	this->request_duration = arg.GetRequestDuration();
 	return *this;
 }
 

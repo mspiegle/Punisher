@@ -15,6 +15,8 @@
 #include "Socket.hxx"
 
 #include <stddef.h>
+#include <sys/time.h>
+#include <stdint.h>
 
 namespace Punisher {
 
@@ -41,16 +43,29 @@ class Protocol {
 		const Request*     request;
 		mutable Validator* validator;
 		M::String          error;
+		struct timeval     start_time;
+		struct timeval     end_time;
 
 	public:
 		Protocol();
 		Protocol(const Request* request);
 		virtual ~Protocol();
 
+		inline struct timeval GetStartTime() const {
+			return start_time;
+		}
+
+		inline struct timeval GetEndTime() const {
+			return end_time;
+		}
+
+		uint64_t GetRequestDuration() const;
+
+		Validator* GetValidator() const;
+		void       SetValidator(Validator* validator);
 
 		const Request* GetRequest() const;
-		Validator* GetValidator() const;
-		void SetValidator(Validator* validator);
+
 		inline M::String GetError() const {
 			return error;
 		}

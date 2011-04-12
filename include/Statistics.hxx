@@ -15,20 +15,22 @@ namespace Punisher {
 
 class Statistics {
 	private:
-		//sockets
+		// sockets
 		int open_sockets;
 		int connected_sockets;
 		int keepalive_sockets;
 
-		//requests
+		// requests
 		uint64_t total_requests;
 		uint64_t failed_requests;
 		int      concurrent_requests;
 
-		//data
+		// data
 		uint64_t bytes_sent;
 		uint64_t bytes_received;
 
+		// other
+		uint64_t request_duration;
 	public:
 		Statistics();
 		virtual ~Statistics();
@@ -138,6 +140,15 @@ class Statistics {
 
 		inline uint64_t AddBytesReceived(uint64_t bytes_received) {
 			return this->bytes_received += bytes_received;
+		}
+
+		// misc
+		inline uint64_t GetRequestDuration() const {
+			return request_duration;
+		}
+
+		inline void AddRequestDuration(uint64_t request_duration) {
+			this->request_duration += request_duration;
 		}
 };
 
