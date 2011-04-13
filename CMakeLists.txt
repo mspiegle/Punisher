@@ -44,7 +44,9 @@ INCLUDE(${Punisher_SOURCE_DIR}/test/SourceFiles.txt)
 # build executables
 ADD_EXECUTABLE(Punisher ${Punisher_SRC} ${Punisher_MAIN})
 ADD_EXECUTABLE(statstest ${Punisher_SRC} ${Punisher_STATSTEST})
+ADD_EXECUTABLE(timetest ${Punisher_SRC} ${Punisher_TIMETEST})
 
 # link executable to necesary libs
 TARGET_LINK_LIBRARIES(Punisher Network Event Logging M yaml pthread crypto)
 TARGET_LINK_LIBRARIES(statstest Network Event Logging M yaml pthread crypto)
+TARGET_LINK_LIBRARIES(timetest Network Event Logging M yaml pthread crypto)

@@ -1,1 +1,2 @@
-FILE(GLOB Punisher_STATSTEST ${Punisher_SOURCE_DIR}/test/*)
+FILE(GLOB Punisher_STATSTEST ${Punisher_SOURCE_DIR}/test/statistics.cxx)
+FILE(GLOB Punisher_TIMETEST ${Punisher_SOURCE_DIR}/test/time.cxx)

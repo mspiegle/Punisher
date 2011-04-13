@@ -177,6 +177,7 @@ Worker::HandleReadable(const Event::Item& item) {
 		switch (ret.state) {
 			case STATE_DONE:
 				// here, we collect per-request metrics
+				Logging::Info("Adding usec[%lu]", protocol->GetRequestDuration());
 				stats.AddRequestDuration(protocol->GetRequestDuration());
 
 				// clean up protocol
