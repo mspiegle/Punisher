@@ -36,7 +36,7 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 # CFLAGS
-ADD_DEFINITIONS(-DDEBUG)
+ADD_DEFINITIONS(-DDEBUG -O0 -Wall -g3 -Wextra -Werror -Wfatal-errors)
 
 INCLUDE(${Punisher_SOURCE_DIR}/src/SourceFiles.txt)
 INCLUDE(${Punisher_SOURCE_DIR}/test/SourceFiles.txt)

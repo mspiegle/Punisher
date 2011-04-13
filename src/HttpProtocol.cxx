@@ -16,6 +16,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
+
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 namespace Punisher {
 
@@ -93,9 +97,9 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			//exceeding our buffer usually means there was a protocol error
 			Logging::Error("HttpProtocol::ReadData(): Error reading protocol");
 			state = HTTP_DONE;
-			error = "Protocol Error: URL[";
-			error += ((HttpRequest*)request)->GetPath();
-			error += "]";
+			this->error = "Protocol Error: URL[";
+			this->error += ((HttpRequest*)request)->GetPath();
+			this->error += "]";
 			ret.success = false;
 			return ret;
 		}
@@ -110,7 +114,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Incorrect protocol");
 						state = HTTP_DONE;
-						error = "Protocol is not HTTP";
+						this->error = "Protocol is not HTTP";
 						ret.success = false;
 						return ret;
 					}
@@ -129,7 +133,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Invalid version");
 						state = HTTP_DONE;
-						error = "Unknown HTTP version";
+						this->error = "Unknown HTTP version";
 						ret.success = false;
 						return ret;
 					}
@@ -148,7 +152,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Invalid status code");
 						state = HTTP_DONE;
-						error = "Unknown HTTP status code";
+						this->error = "Unknown HTTP status code";
 						ret.success = false;
 						return ret;
 					}
@@ -195,7 +199,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					state = NEED_HFIN;
 					iter = 0;
 				} else {
-					//we want to skip the first character IF it's a space
+				// we want to skip the first character IF it's a space
 					if (iter == 0 && buffer[x] == ' ') {
 						continue;
 					}
@@ -221,7 +225,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				if (proto_content_length < 1) {
 					LOGGING_DEBUG("HttpProtocol::ReadData(): Missing Content-Length");
 					state = HTTP_DONE;
-					error = "No Content-Length header provided";
+					this->error = "No Content-Length header provided";
 					ret.success = false;
 					return ret;
 				}
@@ -251,13 +255,13 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						validator->Final();
 						if (true != validator->Compare(request->GetValidator())) {
 							state = HTTP_DONE;
-							error = "Validation failure: URL[";
-							error += ((HttpRequest*)request)->GetPath();
-							error += "] WANT[";
-							error += request->GetValidator()->ToString();
-							error += "] GOT[";
-							error += validator->ToString();
-							error += "]";
+							this->error = "Validation failure: URL[";
+							this->error += ((HttpRequest*)request)->GetPath();
+							this->error += "] WANT[";
+							this->error += request->GetValidator()->ToString();
+							this->error += "] GOT[";
+							this->error += validator->ToString();
+							this->error += "]";
 							ret.success = false;
 							return ret;
 						}
@@ -267,8 +271,20 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					ret.state = STATE_DONE;
 					ret.keepalive = keepalive;
 
-					// handle per-request time
-					gettimeofday(&end_time, NULL);
+					// end per-request time
+					struct timeval time_now;
+					int error;
+					if (-1 == gettimeofday(&time_now, NULL)) {
+						error = errno;
+						char message[512];
+						memset(message, 0, sizeof(message));
+						strerror_r(error, message, sizeof(message));
+						Logging::Error("HttpProtocol::Connect(): gettimeofday(): %s",
+						               message);
+					} else {
+						this->end_time = (time_now.tv_sec * 1000000) + time_now.tv_usec;
+						LOGGING_DEBUG("End Timer! [%" PRIu64 "]", this->end_time);
+					}
 
 					return ret;
 				}
@@ -276,12 +292,13 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				break;
 
 			case HTTP_DONE:
+				Logging::Error("How did we end up here?");
 				ret.success = true;
 				ret.state = STATE_DONE;
 				ret.keepalive = keepalive;
 
 				// handle per-request time
-				gettimeofday(&end_time, NULL);
+				//gettimeofday(&end_time, NULL);
 
 				return ret;
 				break;
@@ -289,7 +306,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			default:
 				Logging::Error("HttpProtocol::ReadData(): Invalid http state");
 				state = HTTP_DONE;
-				error = "Unknown error";
+				this->error = "Unknown error";
 				ret.success = false;
 				return ret;
 				break;
@@ -332,15 +349,28 @@ HttpProtocol::WriteData(Network::Socket* socket) {
 			return ret;
 		}
 	}
-	error = "Error sending request";
+	this->error = "Error sending request";
 	ret.success = false;
 	return ret;
 }
 
 Network::network_error_t
 HttpProtocol::Connect(Network::Socket* socket) {
-	// start our per-request timer
-	gettimeofday(&start_time, NULL);
+	// start our per-request timer only once
+	if (start_time == 0) {
+		struct timeval time_now;
+		int error;
+		if (-1 == gettimeofday(&time_now, NULL)) {
+			error = errno;
+			char message[512];
+			memset(message, 0, sizeof(message));
+			strerror_r(error, message, sizeof(message));
+			Logging::Error("HttpProtocol::Connect(): gettimeofday(): %s", message);
+		} else {
+			this->start_time = (time_now.tv_sec * 1000000) + time_now.tv_usec;
+			LOGGING_DEBUG("Start Timer! [%" PRIu64 "]", this->start_time);
+		}
+	}
 
 	// perform a protocol-specific Connect()
 	if (NULL != socket) {

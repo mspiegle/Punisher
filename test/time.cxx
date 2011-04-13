@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <stdint.h>
+#include <string.h>
+
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 int main() {
 	// time objects
@@ -49,7 +53,7 @@ int main() {
 
 	uint64_t start_usec = (start_time.tv_sec * 1000000) + start_time.tv_usec;
 	uint64_t end_usec = (end_time.tv_sec * 1000000) + end_time.tv_usec;
-	printf("usec[%llu]\n", end_usec - start_usec);
+	printf("usec[%" PRIu64 "]\n", end_usec - start_usec);
 	
 	con.Close();
 

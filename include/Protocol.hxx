@@ -43,23 +43,25 @@ class Protocol {
 		const Request*     request;
 		mutable Validator* validator;
 		M::String          error;
-		struct timeval     start_time;
-		struct timeval     end_time;
+		uint64_t           start_time;
+		uint64_t           end_time;
 
 	public:
 		Protocol();
 		Protocol(const Request* request);
 		virtual ~Protocol();
 
-		inline struct timeval GetStartTime() const {
+		uint64_t GetStartTime() const {
 			return start_time;
 		}
 
-		inline struct timeval GetEndTime() const {
+		uint64_t GetEndTime() const {
 			return end_time;
 		}
 
-		uint64_t GetRequestDuration() const;
+		uint64_t GetRequestDuration() const {
+			return end_time - start_time;
+		}
 
 		Validator* GetValidator() const;
 		void       SetValidator(Validator* validator);

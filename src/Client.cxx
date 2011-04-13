@@ -174,17 +174,22 @@ Client::Start() {
 			Logging::Error("Client::Start(): Error getting start time");
 			return;
 		}
+		uint64_t elapsed_requests = tmp_stats.GetTotalRequests() - last_requests;
+		uint64_t elapsed_duration = tmp_stats.GetRequestDuration() - last_duration;
+		if (elapsed_requests == 0) {
+			//TODO: not an ideal solution, but should stop the FPE
+			elapsed_requests = 1;
+		}
 		printf("%7ld %6" PRIu64 " %5d %5d %5d %8" PRIu64 " %8" PRIu64 \
 		       "%7" PRIu64 " %12" PRIu64 " %8" PRIu64 "\n",
 		       now_time.tv_sec - start_time.tv_sec,
-		       (tmp_stats.GetTotalRequests() - last_requests) / config->GetDelay(),
+		       elapsed_requests / config->GetDelay(),
 		       tmp_stats.GetOpenSockets(),
 		       tmp_stats.GetConnectedSockets(),
 		       tmp_stats.GetKeepaliveSockets(),
 		       tmp_stats.GetBytesSent(),
 		       tmp_stats.GetBytesReceived(),
-		       ((tmp_stats.GetRequestDuration() - last_duration) /
-					 (tmp_stats.GetTotalRequests() - last_requests)) / 1000,
+		       (elapsed_duration / elapsed_requests) / 1000,
 		       tmp_stats.GetTotalRequests(),
 		       tmp_stats.GetFailedRequests());
 		last_requests = tmp_stats.GetTotalRequests();

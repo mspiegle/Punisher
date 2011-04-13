@@ -48,12 +48,4 @@ Protocol::SetValidator(Validator* validator) {
 	}
 }
 
-uint64_t
-Protocol::GetRequestDuration() const {
-	// find the difference between start_time and end_time in microseconds
-	uint64_t start_usec = (start_time.tv_sec * 1000000) + start_time.tv_usec;
-	uint64_t end_usec = (end_time.tv_sec * 1000000) + end_time.tv_usec;
-	return (end_usec - start_usec);
-}
-
 }
