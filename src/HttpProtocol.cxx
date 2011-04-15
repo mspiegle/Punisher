@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <assert.h>
 
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
@@ -61,11 +62,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 	size_t buffer_size = sizeof(buffer);
 	protocol_result_t ret;
 	switch (socket->Read(buffer, &buffer_size)) {
-		case Network::NETWORK_SUCCESS:
-			break;
-
 		case Network::NETWORK_ERROR:
-			Logging::Info("HttpProtocol::ReadData(): socket read failed");
+			this->error = "HttpProtocol::ReadData(): socket read failed";
 			ret.success = false;
 			return ret;
 			break;
@@ -78,23 +76,25 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			break;
 
 		default:
-			//TODO: shouldn't we return from here?
-			Logging::Error("HttpProtocol::ReadData(): Bad return from Socket::Read()");
+			// this shouldn't happen, but we'll definitely know if it does
+			Logging::Error("HttpProtocol::ReadData(): Invalid network_error_t");
+			assert(false);
 			break;
 	}
 
+	// TODO: see if we can factor this out into the Statistics class
 	ret.bytes_transferred = buffer_size;
 
 	for (unsigned int x = 0; x < buffer_size; ++x) {
 
-		//ignore '\r'
-		if (buffer[x] == '\r' && state != NEED_BODY) {
+		// ignore '\r', but not if we're parsing the body
+		if ((buffer[x] == '\r') && (state != NEED_BODY)) {
 			continue;
 		}
 
-		//make sure we don't exceed our local buffer
+		// make sure we don't exceed our local buffer
 		if (iter >= sizeof(buffer)) {
-			//exceeding our buffer usually means there was a protocol error
+			// exceeding our buffer usually means there was a protocol error
 			Logging::Error("HttpProtocol::ReadData(): Error reading protocol");
 			state = HTTP_DONE;
 			this->error = "Protocol Error: URL[";
@@ -104,10 +104,11 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			return ret;
 		}
 
+		// this is the big-ass switch parser.  not pretty, but probably fast.
 		switch (state) {
 			case NEED_PROTO:
 				if (buffer[x] == '/') {
-					//verify that the protocol is HTTP
+					// verify that the protocol is HTTP
 					if (true == fast_strcmp4(temp, 'H', 'T', 'T', 'P')) {
 						state = NEED_VERSION;
 						iter = 0;
@@ -126,6 +127,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 
 			case NEED_VERSION:
 				if (buffer[x] == ' ') {
+					// TODO: convert this to fast_strcmp
 					temp[iter] = '\0';
 					if (version.Set(temp)) {
 						state = NEED_STATUS_CODE;
@@ -234,6 +236,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				break;
 
 			case NEED_BODY:
+				// TODO: break this out into a separate function
 				//catch our local buffer before it overflows
 				if (iter >= (sizeof(buffer) - 1)) {
 					//call out for validation and reset buffer
