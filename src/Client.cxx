@@ -142,7 +142,7 @@ Client::Start() {
 
 		//every 10 iterations, print the headers again
 		if (0 == (count % 10)) {
-			printf("\n%7s %6s %5s %5s %5s %8s %8s %6s %12s %8s\n",
+			printf("\n%7s %6s %5s %5s %5s %8s %10s %6s %12s %6s\n",
 			       "SECS",
 			       "RPS",
 			       "OSKS",
@@ -180,8 +180,8 @@ Client::Start() {
 			//TODO: not an ideal solution, but should stop the FPE
 			elapsed_requests = 1;
 		}
-		printf("%7ld %6" PRIu64 " %5d %5d %5d %8" PRIu64 " %8" PRIu64 \
-		       "%7" PRIu64 " %12" PRIu64 " %8" PRIu64 "\n",
+		printf("%7ld %6" PRIu64 " %5d %5d %5d %8" PRIu64 " %10" PRIu64 \
+		       " %6" PRIu64 " %12" PRIu64 " %6" PRIu64 "\n",
 		       now_time.tv_sec - start_time.tv_sec,
 		       elapsed_requests / config->GetDelay(),
 		       tmp_stats.GetOpenSockets(),
