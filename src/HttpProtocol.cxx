@@ -62,6 +62,10 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 	size_t buffer_size = sizeof(buffer);
 	protocol_result_t ret;
 	switch (socket->Read(buffer, &buffer_size)) {
+		case Network::NETWORK_SUCCESS:
+			// whoops - without this, everything is an error!
+			break;
+
 		case Network::NETWORK_ERROR:
 			this->error = "HttpProtocol::ReadData(): socket read failed";
 			ret.success = false;
