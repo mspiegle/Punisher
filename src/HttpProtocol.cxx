@@ -89,7 +89,13 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 	// TODO: see if we can factor this out into the Statistics class
 	ret.bytes_transferred = buffer_size;
 
-	for (unsigned int x = 0; x < buffer_size; ++x) {
+	// handle connection finished situation
+	bool finished = false;
+	if (buffer_size == 0) {
+		finished = true;
+	}
+
+	for (unsigned int x = 0; x <= buffer_size; ++x) {
 
 		// ignore '\r', but not if we're parsing the body
 		if ((buffer[x] == '\r') && (state != NEED_BODY)) {
@@ -228,7 +234,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			case HEADER_CHECK:
 				//this gives us a chance to verify that we got the necessary headers
 				//currently, we're only checking for content_length
-				if (proto_content_length < 1) {
+				if ((proto_content_length < 1) && (version.Get() != HTTP_10)) {
 					LOGGING_DEBUG("HttpProtocol::ReadData(): Missing Content-Length");
 					state = HTTP_DONE;
 					this->error = "No Content-Length header provided";
@@ -240,7 +246,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				break;
 
 			case NEED_BODY:
-				// TODO: break this out into a separate function
+				// TODO: break this case out into a separate function
 				//catch our local buffer before it overflows
 				if (iter >= (sizeof(buffer) - 1)) {
 					//call out for validation and reset buffer
@@ -255,7 +261,14 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				++iter;
 				++parsed_content_length;
 
-				if (parsed_content_length >= proto_content_length) {
+				// if a content-length response header was sent, we'll know if
+				// we're supposed to be done or not
+				if ((proto_content_length > 0) 
+				    && (parsed_content_length >= proto_content_length)) {
+					finished = true;
+				}
+
+				if (finished == true) {
 					//we're done? make final validation call and return
 					if (NULL != validator) {
 						validator->Update(temp, iter);
@@ -295,7 +308,6 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 
 					return ret;
 				}
-
 				break;
 
 			case HTTP_DONE:
