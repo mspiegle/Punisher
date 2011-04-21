@@ -74,6 +74,11 @@ Worker::ThreadMain() {
 			// get proper socket via SocketFactory
 			Network::Socket* socket = NULL;
 			socket = Network::SocketFactory::CreateSocket(socket_type);
+			if (socket == NULL) {
+				Logging::Error("Worker::ThreadMain(): couldn't create socket");
+				delete(protocol);
+				continue;
+			}
 			stats.AddOpenSockets(1);
 
 			// enable non-blocking mode
