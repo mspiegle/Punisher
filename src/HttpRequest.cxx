@@ -189,9 +189,4 @@ HttpRequest::CreateProtocol() const {
 	return new HttpProtocol(this);
 }
 
-Network::Socket*
-HttpRequest::CreateSocket() const {
-	return new Network::TcpSocket();
-}
-
 }

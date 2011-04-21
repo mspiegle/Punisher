@@ -57,7 +57,6 @@ class HttpRequest : public Request {
 		//const M::String& GetRequest() const;
 		//bool Process();
 		HttpProtocol* CreateProtocol() const;
-		Network::Socket* CreateSocket() const;
 
 		bool SetField(int field, const char* value);
 

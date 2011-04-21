@@ -75,6 +75,7 @@ class Protocol {
 		virtual protocol_result_t ReadData(Network::Socket* socket) = 0;
 		virtual protocol_result_t WriteData(Network::Socket* socket) = 0;
 		virtual Network::network_error_t Connect(Network::Socket* socket) = 0;
+		virtual Network::socket_type_t GetSocketType() = 0;
 };
 
 }

@@ -16,6 +16,7 @@
 #include "Protocol.hxx"
 #include "Network.hxx"
 #include "Socket.hxx"
+#include "SocketFactory.hxx"
 #include "Statistics.hxx"
 
 #include <unistd.h>
@@ -65,11 +66,15 @@ Worker::ThreadMain() {
 			LOGGING_DEBUG("Worker::ThreadMain(): socket check: while (%d < %d)",
 			              stats.GetOpenSockets(), config->GetConnectionsPerThread());
 
-			// grab the next request, create a socket, and protocol handler
+			// grab the next request, create a protocol handler, and socket type
 			const Request* request = config->GetRequest(id, next_request);
-			Network::Socket* socket = request->CreateSocket();
-			stats.AddOpenSockets(1);
 			Protocol* protocol = request->CreateProtocol();
+			Network::socket_type_t socket_type = protocol->GetSocketType();
+
+			// get proper socket via SocketFactory
+			Network::Socket* socket = NULL;
+			socket = Network::SocketFactory::CreateSocket(socket_type);
+			stats.AddOpenSockets(1);
 
 			// enable non-blocking mode
 			if (!socket->SetBlocking(false)) {

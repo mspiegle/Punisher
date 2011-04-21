@@ -12,10 +12,17 @@
 namespace Network {
 
 typedef enum {
-	NETWORK_ERROR = 0,
-	NETWORK_SUCCESS,
-	NETWORK_WOULDBLOCK
+	NETWORK_SUCCESS = 0,
+	NETWORK_WOULDBLOCK,
+	NETWORK_ERROR
 } network_error_t;
+
+typedef enum {
+	SOCKET_TCP = 0,
+	SOCKET_UDP,
+	SOCKET_UNIX
+} socket_type_t;
+
 
 }
 

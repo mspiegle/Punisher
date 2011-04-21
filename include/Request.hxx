@@ -39,7 +39,6 @@ class Request {
 		//virtual const M::String& GetRequest() const = 0;
 		//virtual bool Process() = 0;
 		virtual Protocol* CreateProtocol() const = 0;
-		virtual Network::Socket* CreateSocket() const = 0;
 
 		virtual bool SetField(int field, const char* value) = 0;
 };

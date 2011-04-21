@@ -69,6 +69,10 @@ class HttpProtocol: public Protocol {
 
 		Network::network_error_t Connect(Network::Socket* socket);
 
+		inline Network::socket_type_t GetSocketType() {
+			return Network::SOCKET_TCP;
+		}
+
 		const HttpRequest* GetRequest() const;
 };
 
