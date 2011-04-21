@@ -230,7 +230,7 @@ Config::ParseDocument(const yaml_document_t* document) {
 	int nodes = -1;
 	for (node = document->nodes.start; node < document->nodes.top; node++) {
 		nodes++;
-		if (nodes % 10000 == 0) {
+		if (nodes % 100000 == 0) {
 			Logging::Info("Parsed [%d] nodes", nodes);
 		}
 		//we only want scalar nodes
