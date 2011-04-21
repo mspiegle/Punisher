@@ -60,43 +60,26 @@ Worker::SetIterations(size_t iterations) {
 void*
 Worker::ThreadMain() {
 	while (true == GetRunning()) {
-		//everytime we loop, make sure that we have enough sockets open
+		// everytime we loop, make sure that we have enough sockets open
 		while (stats.GetOpenSockets() < config->GetConnectionsPerThread()) {
 			LOGGING_DEBUG("Worker::ThreadMain(): socket check: while (%d < %d)",
 			              stats.GetOpenSockets(), config->GetConnectionsPerThread());
 
-			//grab the next request and create socket
+			// grab the next request, create a socket, and protocol handler
 			const Request* request = config->GetRequest(id, next_request);
-			Network::Socket* socket = NULL;
+			Network::Socket* socket = request->CreateSocket();
+			stats.AddOpenSockets(1);
+			Protocol* protocol = request->CreateProtocol();
 
-			/*
-			//TODO: keepalives break my ability to manage multiple protocols
-			//create the appropriate socket or get a keepalive socket
-			if (config->GetKeepalive()) {
-				if (keepalives.size() > 1) {
-					socket = keepalives.front();
-					keepalives.pop_front();
-				}
-			}
-			*/
-		
-			//if there were no keepalive sockets available...
-			if (NULL == socket) {
-				socket = request->CreateSocket();
-				stats.AddOpenSockets(1);
-			}
-
+			// enable non-blocking mode
 			if (!socket->SetBlocking(false)) {
 				Logging::Error("Worker::ThreadMain(): Error during SetBlocking()");
 			}
 
-			LOGGING_DEBUG("Worker::ThreadMain(): Calling socket->SetReuseAddr()");
+			// reuse sockets
 			if (!socket->SetReuseAddr(true)) {
 				Logging::Error("Worker::ThreadMain(): Error during SetReuseAddr()");
 			}
-
-			//create a protocol that matches the type of the request
-			Protocol* protocol = request->CreateProtocol();
 
 			// do the initial connect (which probably returns EWOULDBLOCK)
 			// but we'll check just to make sure
