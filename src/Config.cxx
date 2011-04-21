@@ -185,7 +185,6 @@ Config::ParseScript() {
 	//main parsing loop
 	while (!done) {
 		//load document
-		Logging::Info("Loading document into YAML Parser...");
 		if (!yaml_parser_load(&parser, &document)) {
 			Logging::Error("yaml_parser_parse(): %s", parser.problem);
 			yaml_parser_delete(&parser);
@@ -230,7 +229,8 @@ Config::ParseDocument(const yaml_document_t* document) {
 	//loop through each node in the document
 	int nodes = -1;
 	for (node = document->nodes.start; node < document->nodes.top; node++) {
-		if (nodes % 1000 == 0) {
+		nodes++;
+		if (nodes % 10000 == 0) {
 			Logging::Info("Parsed [%d] nodes", nodes);
 		}
 		//we only want scalar nodes
