@@ -1,0 +1,8 @@
+=====================
+* Building Punisher *
+=====================
+1) Make sure libyaml and cmake are installed
+2) cd build
+3) cmake ..
+4) make
+Now you should have build/Punisher
