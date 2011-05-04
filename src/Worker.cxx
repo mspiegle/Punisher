@@ -170,16 +170,13 @@ Worker::HandleReadable(const Event::Item& item) {
 		switch (ret.state) {
 			case STATE_DONE:
 				// here, we collect per-request metrics
-				LOGGING_DEBUG("Adding usec[%lu]", protocol->GetRequestDuration());
 				stats.AddRequestDuration(protocol->GetRequestDuration());
 
 				// clean up protocol
 				delete(protocol);
 
 				//handle keepalives
-				LOGGING_DEBUG("Worker::HandleReadable(): testing keepalive");
 				if (config->GetKeepalive() && (ret.keepalive == true)) {
-					LOGGING_DEBUG("Worker::HandleReadable(): keepalive socket");
 					keepalives.push_back(socket);
 				} else {
 					delete(socket);
@@ -275,6 +272,7 @@ Worker::HandleHangup(const Event::Item& item) {
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
 	if (socket->GetConnected()) {
+		errors.push_front("Worker::HandleHangup(): hangup on connected socket");
 		stats.AddTotalRequests(1);
 		stats.AddFailedRequests(1);
 		stats.AddConnectedSockets(-1);
@@ -295,6 +293,7 @@ Worker::HandleError(const Event::Item& item) {
 	//if we were connected, then we should bump the request counters
 	//if we weren't connected, we only need to handle the socket counters
 	if (socket->GetConnected()) {
+		errors.push_front("Worker::HandleError(): error on connected socket");
 		stats.AddTotalRequests(1);
 		stats.AddFailedRequests(1);
 		stats.AddConnectedSockets(-1);
