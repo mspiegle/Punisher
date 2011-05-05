@@ -25,8 +25,7 @@ namespace Punisher {
 class Request;
 
 typedef enum {
-	STATE_NONE = 0,
-	STATE_DONE,
+	STATE_DONE = 0,
 	STATE_READ,
 	STATE_WRITE
 } protocol_state_t;
@@ -45,6 +44,7 @@ class Protocol {
 		M::String          error;
 		uint64_t           start_time;
 		uint64_t           end_time;
+		const Request* GetRequest() const;
 
 	public:
 		Protocol();
@@ -65,8 +65,6 @@ class Protocol {
 
 		Validator* GetValidator() const;
 		void       SetValidator(Validator* validator);
-
-		const Request* GetRequest() const;
 
 		inline M::String GetError() const {
 			return error;

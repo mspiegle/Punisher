@@ -57,6 +57,9 @@ class HttpProtocol: public Protocol {
 		M::String    header_key;
 		bool         keepalive;
 
+	protected:
+		const HttpRequest* GetRequest() const;
+
 	public:
 		HttpProtocol();
 		HttpProtocol(const HttpRequest* request);
@@ -71,8 +74,6 @@ class HttpProtocol: public Protocol {
 		inline Network::socket_type_t GetSocketType() {
 			return Network::SOCKET_TCP;
 		}
-
-		const HttpRequest* GetRequest() const;
 };
 
 #undef HEADER_MAP

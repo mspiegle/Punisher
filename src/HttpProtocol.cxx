@@ -343,8 +343,6 @@ HttpProtocol::WriteData(Network::Socket* socket) {
 		buffer += "\r\n";
 		buffer += "Host: ";
 		buffer += GetRequest()->GetHost().Name().ToString();
-		//buffer += "\r\n";
-		//buffer += "Connection: close";
 		buffer += "\r\n";
 		buffer += "\r\n";
 
