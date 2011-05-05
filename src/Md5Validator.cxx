@@ -40,7 +40,7 @@ Md5Validator::Assign(const M::String& hash) {
 }
 
 void
-Md5Validator::Update(void* buffer, size_t size) {
+Md5Validator::Update(const void* buffer, size_t size) {
 	this->hash.Update(buffer, size);
 }
 

@@ -53,8 +53,7 @@ class HttpProtocol: public Protocol {
 		HttpStatus   status;
 		size_t       proto_content_length;
 		size_t       parsed_content_length;
-		char         temp[buffer_size];
-		size_t       iter;
+		M::String    temp;
 		M::String    header_key;
 		bool         keepalive;
 

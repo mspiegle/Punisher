@@ -30,7 +30,7 @@ class String {
 		String(const char* arg);
 		String(char arg);
 		~String();
-		
+
 		static const size_t npos = -1;
 
 		size_t Capacity() const;
@@ -70,17 +70,7 @@ class String {
 		char& operator[](size_t pos);
 
 		String& Append(const char* arg);
-
-		inline String& Append(char c) {
-			if ((capacity - length - 1) < 1) {
-				Reserve(capacity + 1);
-			}
-
-			data[length] = c;
-			++length;
-			data[length] = '\0';
-			return *this;
-		}
+		String& Append(const char c);
 
 		inline String& Append(unsigned int count, char c) {
 			if ((capacity - length - 1) < count) {
@@ -107,6 +97,17 @@ class String {
 		int Compare(const String& arg) const;
 		int Compare(const char* arg) const;
 
+		inline bool FastCompare4(char a, char b, char c, char d) {
+			if (length < 4) {
+				return false;
+			}
+
+			return ((data[0] == a) &&
+			        (data[1] == b) &&
+			        (data[2] == c) &&
+			        (data[3] == d));
+		}
+
 		size_t Find(const String& arg, size_t pos = 0) const;
 		size_t Find(const char* arg, size_t pos = 0) const;
 
@@ -116,13 +117,8 @@ class String {
 		}
 
 		String& Erase(size_t pos, size_t size);
-
-		inline String& Erase(size_t pos) {
-			if (pos < length) {
-				data[pos] = '\0';
-			}
-			return *this;
-		}
+		String& Erase(size_t pos);
+		String& Erase();
 
 		inline const char* ToCString() const {
 			return data;

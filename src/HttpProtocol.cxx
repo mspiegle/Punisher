@@ -29,7 +29,6 @@ HttpProtocol::Init() {
 	state = SEND_REQUEST;
 	proto_content_length = 0;
 	parsed_content_length = 0;
-	iter = 0;
 	keepalive = false;
 }
 
@@ -103,7 +102,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 		}
 
 		// make sure we don't exceed our local buffer
-		if (iter >= sizeof(buffer)) {
+		if (temp.Length() >= sizeof(buffer)) {
 			// exceeding our buffer usually means there was a protocol error
 			Logging::Error("HttpProtocol::ReadData(): Error reading protocol");
 			state = HTTP_DONE;
@@ -119,9 +118,9 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			case NEED_PROTO:
 				if (buffer[x] == '/') {
 					// verify that the protocol is HTTP
-					if (true == fast_strcmp4(temp, 'H', 'T', 'T', 'P')) {
+					if (true == temp.FastCompare4('H', 'T', 'T', 'P')) {
+						temp.Erase();
 						state = NEED_VERSION;
-						iter = 0;
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Incorrect protocol");
 						state = HTTP_DONE;
@@ -130,18 +129,16 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						return ret;
 					}
 				} else {
-					temp[iter] = buffer[x];
-					++iter;
+					temp += buffer[x];
 				}
 				break;
 
 			case NEED_VERSION:
 				if (buffer[x] == ' ') {
 					// TODO: convert this to fast_strcmp
-					temp[iter] = '\0';
 					if (version.Set(temp)) {
+						temp.Erase();
 						state = NEED_STATUS_CODE;
-						iter = 0;
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Invalid version");
 						state = HTTP_DONE;
@@ -150,17 +147,15 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						return ret;
 					}
 				} else {
-					temp[iter] = buffer[x];
-					++iter;
+					temp += buffer[x];
 				}
 				break;
 
 			case NEED_STATUS_CODE:
 				if (buffer[x] == ' ') {
-					temp[iter] = '\0';
 					if (status.Set(temp)) {
+						temp.Erase();
 						state = NEED_STATUS_TXT;
-						iter = 0;
 					} else {
 						Logging::Error("HttpProtocol::ReadData(): Invalid status code");
 						state = HTTP_DONE;
@@ -169,8 +164,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						return ret;
 					}
 				} else {
-					temp[iter] = buffer[x];
-					++iter;
+					temp += buffer[x];
 				}
 				break;
 
@@ -185,38 +179,34 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 
 			case NEED_HKEY:
 				if (buffer[x] == ':') {
-					temp[iter] = '\0';
 					header_key = temp;
 					state = NEED_HVAL;
-					iter = 0;
+					temp.Erase();
 				} else {
-					temp[iter] = buffer[x];
-					++iter;
+					temp += buffer[x];
 				}
 				break;
 
 			case NEED_HVAL:
 				if (buffer[x] == '\n') {
 					//all we really care about is the content-length for now...
-					temp[iter] = '\0';
 					if (0 == strncmp("Content-Length", header_key.ToCString(), 15)) {
-						proto_content_length = strtoll(temp, NULL, 10);
+						proto_content_length = strtoll(temp.ToCString(), NULL, 10);
 					}
 					if (0 == strncmp("Connection", header_key.ToCString(), 10)) {
-						if (0 == strncmp("close", temp, 5)) {
+						if (0 == strncmp("close", temp.ToCString(), 5)) {
 							LOGGING_DEBUG("HttpProtocol::ReadData(): keepalive disabled");
 							keepalive = false;
 						}
 					}
 					state = NEED_HFIN;
-					iter = 0;
+					temp.Erase();
 				} else {
 				// we want to skip the first character IF it's a space
-					if (iter == 0 && buffer[x] == ' ') {
+					if (temp.Length() == 0 && buffer[x] == ' ') {
 						continue;
 					}
-					temp[iter] = buffer[x];
-					++iter;
+					temp += buffer[x];
 				}
 				break;
 
@@ -236,8 +226,10 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				//currently, we're only checking for content_length
 				if ((proto_content_length < 1) && (version.Get() != HTTP_10)) {
 					LOGGING_DEBUG("HttpProtocol::ReadData(): Missing Content-Length");
+					LOGGING_DEBUG("HttpProtocol::ReadData(): Response was HTTP/[%s]",
+					              version.ToString().ToCString());
 					state = HTTP_DONE;
-					this->error = "No Content-Length header provided";
+					this->error = "Need Content-Length for Non-HTTP/1.0 Responses";
 					ret.success = false;
 					return ret;
 				}
@@ -248,17 +240,16 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			case NEED_BODY:
 				// TODO: break this case out into a separate function
 				//catch our local buffer before it overflows
-				if (iter >= (sizeof(buffer) - 1)) {
+				if (temp.Length() >= (sizeof(buffer) - 1)) {
 					//call out for validation and reset buffer
 					if (NULL != validator) {
-						validator->Update(temp, iter);
+						validator->Update(temp.ToCString(), temp.Length());
 					}
-					iter = 0;
+					temp.Erase();
 				}
 
 				//update buffer and keep track of how many bytes we've read on the body
-				temp[iter] = buffer[x];
-				++iter;
+				temp += buffer[x];
 				++parsed_content_length;
 
 				// if a content-length response header was sent, we'll know if
@@ -271,7 +262,7 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				if (finished == true) {
 					//we're done? make final validation call and return
 					if (NULL != validator) {
-						validator->Update(temp, iter);
+						validator->Update(temp.ToCString(), temp.Length());
 						validator->Final();
 						if (true != validator->Compare(request->GetValidator())) {
 							state = HTTP_DONE;

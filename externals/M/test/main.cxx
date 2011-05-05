@@ -37,6 +37,38 @@ int main() {
 	printf("Orig Hash: %s\n", orig.ToString().ToCString());
 	printf("Test Hash: %s\n", test.ToString().ToCString());
 
+	printf("\nerase test\n");
+	M::String erase("0123456789");
+	printf("starts with: %s\n", erase.ToCString());
+	erase.Erase(0,0);
+	printf("erase(0,0):  %s\n", erase.ToCString());
+	erase.Erase(0,1);
+	printf("erase(0,1):  %s\n", erase.ToCString());
+	erase.Erase(0,1);
+	printf("erase(0,1):  %s\n", erase.ToCString());
+	erase.Erase(3,1);
+	printf("erase(3,1):  %s\n", erase.ToCString());
+	erase.Erase(10,1);
+	printf("erase(10,1): %s\n", erase.ToCString());
+	erase.Erase(1,10);
+	printf("erase(1,10): %s\n", erase.ToCString());
+	erase.Erase(4);
+	printf("erase(4):    %s\n", erase.ToCString());
+	erase.Erase();
+	printf("erase():     %s\n", erase.ToCString());
+
+	printf("\nFastCompare4 Test (true, then false, false)\n");
+	M::String fast("0123456789");
+	printf("[%s]\n", (fast.FastCompare4('0', '1', '2', '3')) ? "true" : "false");
+	printf("[%s]\n", (fast.FastCompare4('0', '1', '2', '4')) ? "true" : "false");
+	printf("[%s]\n", (fast.FastCompare4('4', '3', '2', '1')) ? "true" : "false");
+
+	printf("\nmore string test\n");
+	M::String ct;
+	ct += '2';
+	ct += '0';
+	ct += '0';
+	printf("Should be 200: [%s]\n", ct.ToCString());
 
 	return 0;
 }

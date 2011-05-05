@@ -6,6 +6,7 @@
  */
 
 #include "String.hxx"
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -179,6 +180,19 @@ String::Append(const String& arg) {
 }
 
 String&
+String::Append(const char c) {
+	if ((capacity - length - 1) < 1) {
+		Reserve(capacity + 1);
+	}
+
+	data[length] = c;
+	++length;
+	data[length] = '\0';
+	return *this;
+}
+
+
+String&
 String::Assign(const char* arg) {
 	size_t needed_capacity = strlen(arg) + 1;
 
@@ -273,15 +287,32 @@ String::FindFirst(const String& search, size_t pos) const {
 }
 
 String&
-String::Erase(size_t pos = 0, size_t size = -1) {
+String::Erase(size_t pos, size_t size) {
+	// detect an out-of-bounds situation and don't do anything
 	if (pos + size > length) {
 		return *this;
 	}
 
+	// this should remove a 'size' length portion of the string starting from pos
 	memcpy(data + pos, data + pos + size, length - pos + size);
 	length -= size;
 	data[length] = '\0';
 	return *this;
+}
+
+String&
+String::Erase(size_t pos) {
+	if (pos < length) {
+		data[pos] = '\0';
+		length = pos;
+	}
+
+	return *this;
+}
+
+String&
+String::Erase() {
+	return Erase(0);
 }
 
 } //M::

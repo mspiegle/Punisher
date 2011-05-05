@@ -21,7 +21,7 @@ class Validator {
 		Validator();
 		virtual ~Validator();
 
-		virtual void Update(void* buffer, size_t size) = 0;
+		virtual void Update(const void* buffer, size_t size) = 0;
 		virtual void Final() = 0;
 		virtual bool Compare(const Validator* validator) = 0;
 		virtual void GetBuffer(const void** buffer, size_t* size) const = 0;

@@ -28,7 +28,7 @@ class Md5Validator : public Validator {
 
 		void Assign(const char* hash);
 		void Assign(const M::String& hash);
-		void Update(void* buffer, size_t size);
+		void Update(const void* buffer, size_t size);
 		void Final();
 		bool Compare(const Validator* validator);
 		void GetBuffer(const void** buffer, size_t* size) const;

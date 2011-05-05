@@ -7,6 +7,7 @@
  */
 
 #include "HttpStatus.hxx"
+#include "Logging.hxx"
 
 #include <string>
 #include <stdlib.h>
