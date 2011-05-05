@@ -157,34 +157,22 @@ Worker::ThreadMain() {
 void
 Worker::HandleReadable(const Event::Item& item) {
 	LOGGING_DEBUG("Worker::HandleReadable()");
-	
-	Network::Socket* socket = item.GetSocket();
 
+	// feed the protocol parser with a socket
 	Protocol* protocol;
 	protocol = static_cast<Protocol*>(item.GetUserData());
-
+	Network::Socket* socket = item.GetSocket();
 	protocol_result_t ret = protocol->ReadData(socket);
 
+	// handle protocol parser result
 	if (true == ret.success) {
 		stats.AddBytesReceived(ret.bytes_transferred);
 		switch (ret.state) {
 			case STATE_DONE:
-				// here, we collect per-request metrics
+				// collect stats and clean up
 				stats.AddRequestDuration(protocol->GetRequestDuration());
-
-				// clean up protocol
-				delete(protocol);
-
-				//handle keepalives
-				if (config->GetKeepalive() && (ret.keepalive == true)) {
-					keepalives.push_back(socket);
-				} else {
-					delete(socket);
-					stats.AddOpenSockets(-1);
-					stats.AddConnectedSockets(-1);
-				}
-
 				stats.AddTotalRequests(1);
+				delete(protocol);
 				break;
 
 			case STATE_READ:
@@ -194,52 +182,49 @@ Worker::HandleReadable(const Event::Item& item) {
 			case STATE_WRITE:
 				manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 				break;
-
-			default:
-				break;
 		}
 		return;
 	}
 
-	LOGGING_DEBUG("Worker::HandleReadable(): protocol returned failure");
+	// collect errors, stats, and cleanup
 	errors.push_front(protocol->GetError());
-	delete(protocol);
-	delete(socket);
 	stats.AddConnectedSockets(-1);
 	stats.AddOpenSockets(-1);
 	stats.AddTotalRequests(1);
 	stats.AddFailedRequests(1);
+	delete(protocol);
+	delete(socket);
+	return;
 }
 
 void
 Worker::HandleWriteable(const Event::Item& item) {
 	LOGGING_DEBUG("Worker::HandleWriteable()");
 
-	Network::Socket* socket = item.GetSocket();
-
+	// get protocol parser
 	Protocol* protocol;
 	protocol = static_cast<Protocol*>(item.GetUserData());
 
+	Network::Socket* socket = item.GetSocket();
 	if (socket->GetConnected()) {
-		//already connected.  we can write data
-		LOGGING_DEBUG("Worker::HandleWriteable(): Already connected, sending...");
-
+		// already connected.  we can write data
 		protocol_result_t ret = protocol->WriteData(socket);
 
+		// the protocol parser needs to be fed
 		if ((true == ret.success) && (STATE_READ == ret.state)) {
 			stats.AddBytesSent(ret.bytes_transferred);
 			manager.AddSocket(socket, Event::Readable, (void*)protocol);
 			return;
 		}
 
-		Logging::Error("Worker::HandleWriteable(): protocol result unsuccessful");
+		// uh oh, the protocol parser is angry!
 		if (false == ret.success) {
 			errors.push_front(protocol->GetError());
 		}
 		stats.AddTotalRequests(1);
 		stats.AddFailedRequests(1);
 	} else {
-		//we'll handle the connect right here
+		// we weren't connected, so let's do it here
 		Network::network_error_t status;
 		if (Network::NETWORK_SUCCESS == (status = protocol->Connect(socket))) {
 			stats.AddConnectedSockets(1);
@@ -248,7 +233,6 @@ Worker::HandleWriteable(const Event::Item& item) {
 		}
 
 		if (Network::NETWORK_WOULDBLOCK == status) {
-			LOGGING_DEBUG("Worker::HandleWriteable(): The connect would block");
 			manager.AddSocket(socket, Event::Writeable, (void*)protocol);
 			return ;
 		}
@@ -260,11 +244,12 @@ Worker::HandleWriteable(const Event::Item& item) {
 	delete(socket);
 	stats.AddOpenSockets(-1);
 	stats.AddConnectedSockets(-1);
+	return;
 }
 
 void
 Worker::HandleHangup(const Event::Item& item) {
-	Logging::Error("HandleHangup()");
+	Logging::Error("Worker::HandleHangup(): called");
 
 	Network::Socket* socket = item.GetSocket();
 	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
@@ -285,7 +270,7 @@ Worker::HandleHangup(const Event::Item& item) {
 
 void
 Worker::HandleError(const Event::Item& item) {
-	Logging::Error("HandleError()");
+	Logging::Error("Worker::HandleError(): called");
 
 	Network::Socket* socket = item.GetSocket();
 	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
