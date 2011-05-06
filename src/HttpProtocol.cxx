@@ -37,7 +37,7 @@ HttpProtocol::HttpProtocol() {
 }
 
 HttpProtocol::HttpProtocol(const HttpRequest* request) {
-	LOGGING_DEBUG("HttpProtocol::HttpProtocol()");
+	LOGGING_DEBUG("HttpProtocol::HttpProtocol(): called");
 	Init();
 
 	//TODO: Figure out why I need a cast, and can't use a safe cast
@@ -55,7 +55,7 @@ HttpProtocol::~HttpProtocol() {
 
 protocol_result_t
 HttpProtocol::ReadData(Network::Socket* socket) {
-	LOGGING_DEBUG("HttpProtocol::ReadData()");
+	LOGGING_DEBUG("HttpProtocol::ReadData(): called");
 
 	unsigned char buffer[4096];
 	size_t buffer_size = sizeof(buffer);
@@ -68,6 +68,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 		case Network::NETWORK_ERROR:
 			this->error = "HttpProtocol::ReadData(): socket read failed";
 			ret.success = false;
+			LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+			              "ret.success", "false");
 			return ret;
 			break;
 
@@ -75,6 +77,9 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			ret.success = true;
 			ret.state = STATE_READ;
 			ret.bytes_transferred = 0;
+			LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s] %s[%s]",
+			              "ret.success", "true",
+			              "ret.state", "STATE_READ");
 			return ret;
 			break;
 
@@ -110,6 +115,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 			this->error += ((HttpRequest*)request)->GetPath();
 			this->error += "]";
 			ret.success = false;
+			LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+			              "ret.success", "false");
 			return ret;
 		}
 
@@ -126,6 +133,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						state = HTTP_DONE;
 						this->error = "Protocol is not HTTP";
 						ret.success = false;
+						LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+						              "ret.success", "false");
 						return ret;
 					}
 				} else {
@@ -144,6 +153,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						state = HTTP_DONE;
 						this->error = "Unknown HTTP version";
 						ret.success = false;
+						LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+						              "ret.success", "false");
 						return ret;
 					}
 				} else {
@@ -161,6 +172,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						state = HTTP_DONE;
 						this->error = "Unknown HTTP status code";
 						ret.success = false;
+						LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+						              "ret.success", "false");
 						return ret;
 					}
 				} else {
@@ -231,6 +244,8 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 					state = HTTP_DONE;
 					this->error = "Need Content-Length for Non-HTTP/1.0 Responses";
 					ret.success = false;
+					LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s]",
+					              "ret.success", "false");
 					return ret;
 				}
 				state = NEED_BODY;
@@ -297,6 +312,9 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 						LOGGING_DEBUG("End Timer! [%" PRIu64 "]", this->end_time);
 					}
 
+					LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s] %s[%s]",
+					              "ret.success", "true",
+					              "ret.state", "STATE_DONE");
 					return ret;
 				}
 				break;
@@ -307,9 +325,9 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				ret.state = STATE_DONE;
 				ret.keepalive = keepalive;
 
-				// handle per-request time
-				//gettimeofday(&end_time, NULL);
-
+				LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s] %s[%s]",
+				              "ret.success", "true",
+				              "ret.state", "STATE_DONE");
 				return ret;
 				break;
 
@@ -324,11 +342,16 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 	}
 	ret.success = true;
 	ret.state = STATE_READ;
+	LOGGING_DEBUG("HttpProtocol::ReadData(): returning: %s[%s] %s[%s]",
+	              "ret.success", "true",
+	              "ret.state", "STATE_READ");
 	return ret;
 }
 
 protocol_result_t
 HttpProtocol::WriteData(Network::Socket* socket) {
+	LOGGING_DEBUG("HttpProtocol::WriteData(): called");
+
 	size_t data_len = 0;
 	protocol_result_t ret;
 
@@ -364,6 +387,7 @@ HttpProtocol::WriteData(Network::Socket* socket) {
 
 Network::network_error_t
 HttpProtocol::Connect(Network::Socket* socket) {
+	LOGGING_DEBUG("HttpProtocol::Connect(): called");
 	// start our per-request timer only once
 	if (start_time == 0) {
 		struct timeval time_now;

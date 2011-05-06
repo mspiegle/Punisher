@@ -127,19 +127,15 @@ Worker::ThreadMain() {
 			
 			//If the socket isn't connected, you'll get EPOLLHUP regardless
 			if (item.IsHangup() && item.GetSocket()->GetConnected()) {
-				LOGGING_DEBUG("Worker::ThreadMain(): item is hangup");
 				HandleHangup(item);
 			} else
 			if (item.IsError()) {
-				LOGGING_DEBUG("Worker::ThreadMain(): item is error");
 				HandleError(item);
 			} else
 			if (item.IsWriteable()) {
-				LOGGING_DEBUG("Worker::ThreadMain(): item is writeable");
 				HandleWriteable(item);
 			} else
 			if (item.IsReadable()) {
-				LOGGING_DEBUG("Worker::ThreadMain(): item is hangup");
 				HandleReadable(item);
 			} else {
 				Logging::Error("Odd event received");
@@ -156,7 +152,7 @@ Worker::ThreadMain() {
 
 void
 Worker::HandleReadable(const Event::Item& item) {
-	LOGGING_DEBUG("Worker::HandleReadable()");
+	LOGGING_DEBUG("Worker::HandleReadable(): called");
 
 	// feed the protocol parser with a socket
 	Protocol* protocol;
@@ -172,6 +168,9 @@ Worker::HandleReadable(const Event::Item& item) {
 				// collect stats and clean up
 				stats.AddRequestDuration(protocol->GetRequestDuration());
 				stats.AddTotalRequests(1);
+				stats.AddOpenSockets(-1);
+				stats.AddConnectedSockets(-1);
+				delete(socket);
 				delete(protocol);
 				break;
 
@@ -199,7 +198,7 @@ Worker::HandleReadable(const Event::Item& item) {
 
 void
 Worker::HandleWriteable(const Event::Item& item) {
-	LOGGING_DEBUG("Worker::HandleWriteable()");
+	LOGGING_DEBUG("Worker::HandleWriteable(): called");
 
 	// get protocol parser
 	Protocol* protocol;
