@@ -248,7 +248,7 @@ Worker::HandleWriteable(const Event::Item& item) {
 
 void
 Worker::HandleHangup(const Event::Item& item) {
-	Logging::Error("Worker::HandleHangup(): called");
+	//Logging::Error("Worker::HandleHangup(): called");
 
 	Network::Socket* socket = item.GetSocket();
 	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
@@ -269,7 +269,7 @@ Worker::HandleHangup(const Event::Item& item) {
 
 void
 Worker::HandleError(const Event::Item& item) {
-	Logging::Error("Worker::HandleError(): called");
+	//Logging::Error("Worker::HandleError(): called");
 
 	Network::Socket* socket = item.GetSocket();
 	Protocol* protocol = static_cast<Protocol*>(item.GetUserData());
