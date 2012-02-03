@@ -264,7 +264,10 @@ HttpProtocol::ReadData(Network::Socket* socket) {
 				}
 
 				//update buffer and keep track of how many bytes we've read on the body
-				temp += buffer[x];
+				//we only need this data if we're going to do validation
+				if (NULL != validator) {
+					temp += buffer[x];
+				}
 				++parsed_content_length;
 
 				// if a content-length response header was sent, we'll know if

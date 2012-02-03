@@ -35,7 +35,9 @@ class String {
 
 		size_t Capacity() const;
 		size_t Size() const;
-		size_t Length() const;
+		inline size_t Length() const {
+			return length;
+		}
 		void Reserve(size_t arg = 0);
 
 		String& operator=(const String& arg);
