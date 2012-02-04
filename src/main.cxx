@@ -26,7 +26,6 @@ bool         opt_errors      = false;
 int          opt_threads     = 0;
 bool         opt_verbose     = false;
 bool         opt_version     = false;
-bool         opt_fastmode    = false;
 int          opt_timelimit   = -1;
 bool         opt_keepalive   = false;
 int          opt_connections = 64;
@@ -40,7 +39,6 @@ char const*  help_text       = "Usage: %s [-qvVkf] [-citTw int] "
                                "-v:  Enable verbose mode\n"
                                "-V:  Show program version\n"
                                "-k:  Use keepalives (HTTP/1.1)\n"
-                               "-f:  Use Fastmode (Only HTTP/1.0)\n"
                                "-c:  Number of concurrent connections\n"
                                "-i:  Number of iterations to run (requests)\n"
                                "-t:  Number of seconds to run test\n"
@@ -65,7 +63,6 @@ CheckOptions(int argc, char **argv) {
 			case 'v': opt_verbose     = true;           break;
 			case 'V': opt_version     = true;           break;
 			case 'k': opt_keepalive   = true;           break;
-			case 'f': opt_fastmode    = true;           break;
 			case 'd': opt_validation  = true;           break;
 			case 'c': opt_connections = atoi(optarg);   break;
 			case 'i': opt_iterations  = atoi(optarg);   break;
@@ -84,11 +81,6 @@ CheckOptions(int argc, char **argv) {
 			opt_url = strdup(argv[optind]);
 		}
 	}
-
-	if (opt_fastmode && opt_keepalive) {
-		return strdup("You cannot use Fastmode and Keepalive at the same time!\n");
-	}
-
 	return NULL;
 }
 
@@ -121,7 +113,6 @@ int main(int argc, char **argv) {
 	config->SetIterations(opt_iterations);
 	config->SetTimelimit(opt_timelimit);
 	config->SetKeepalive(opt_keepalive);
-	config->SetFastmode(opt_fastmode);
 	config->SetDelay(opt_delay);
 	config->SetQuiet(opt_quiet);
 	config->SetErrors(opt_errors);

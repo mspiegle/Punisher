@@ -138,15 +138,6 @@ Config::SetKeepalive(bool keepalive) {
 	this->keepalive = keepalive;
 }
 
-bool
-Config::GetFastmode() const {
-	return fastmode;
-}
-void
-Config::SetFastmode(bool fastmode) {
-	this->fastmode = fastmode;
-}
-
 M::String
 Config::GetScript() const {
 	return script;

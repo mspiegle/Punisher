@@ -25,7 +25,6 @@ class Config {
 		int                   threads;
 		int                   connections;
 		bool                  validation;
-		bool                  fastmode;
 		bool                  keepalive;
 		bool                  quiet;
 		bool                  errors;
@@ -71,8 +70,6 @@ class Config {
 		bool GetKeepalive() const;
 		void SetKeepalive(bool keepalive);
 
-		bool GetFastmode() const;
-		void SetFastmode(bool fastmode);
 
 		M::String   GetScript() const;
 		void        SetScript(const M::String& script);
