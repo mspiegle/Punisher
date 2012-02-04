@@ -28,7 +28,7 @@ typedef enum {
 } Type;
 
 typedef enum {
-	Default = 0
+	Default = Inet
 } Protocol;
 
 class Socket {
@@ -70,7 +70,7 @@ class Socket {
 		bool GetConnected() const;
 
 		network_error_t Bind(const struct sockaddr* addr, socklen_t size);
-	};
+};
 
 }
 

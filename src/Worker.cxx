@@ -71,15 +71,19 @@ Worker::ThreadMain() {
 			Protocol* protocol = request->CreateProtocol();
 			Network::socket_type_t socket_type = protocol->GetSocketType();
 
-			// get proper socket via SocketFactory
+			// re-use a keepalive socket if possible, otherwise obtain a new one
 			Network::Socket* socket = NULL;
-			socket = Network::SocketFactory::CreateSocket(socket_type);
+			if (config->GetKeepalive()) {
+				//socket = keepalives.pop_front();
+			} else {
+				socket = Network::SocketFactory::CreateSocket(socket_type);
+				stats.AddOpenSockets(1);
+			}
 			if (socket == NULL) {
-				Logging::Error("Worker::ThreadMain(): couldn't create socket");
+				Logging::Error("Worker::ThreadMain(): couldn't obtain socket");
 				delete(protocol);
 				continue;
 			}
-			stats.AddOpenSockets(1);
 
 			// enable non-blocking mode
 			if (!socket->SetBlocking(false)) {

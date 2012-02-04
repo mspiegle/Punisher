@@ -2,6 +2,8 @@
 #include "Logging.hxx"
 #include "Host.hxx"
 #include "HostAddress.hxx"
+#include "SocketMap.hxx"
+#include "SocketFactory.hxx"
 
 #include <stdio.h>
 #include <string.h>
@@ -82,6 +84,20 @@ int main() {
 	} else {
 		printf("reftest: different\n");
 	}
+
+	//SocketMap testing
+	Network::SocketMap map;
+	Network::Socket* mapsocket = NULL;
+	mapsocket = Network::SocketFactory::CreateSocket(Network::SOCKET_TCP);
+	printf("fd of mapsocket [%d]\n", mapsocket->GetFd());
+	map.Push(mapsocket);
+	Network::Socket* mapsocket2 = NULL;
+	mapsocket2 = map.Pop();
+	printf("fd of mapsocket2 [%d]\n", mapsocket2->GetFd());
+	Network::Socket* mapsocket3 = (Network::Socket*)0x1;
+	printf("addr should be 0x1 [%p]\n", mapsocket3);
+	mapsocket3 = map.Pop();
+	printf("addr should be null [%p]\n", mapsocket3);
 
 	return 0;
 }
