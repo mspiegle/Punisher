@@ -58,6 +58,11 @@ Worker::SetIterations(size_t iterations) {
 	}
 }
 
+int
+Worker::GetKeepaliveSockets() {
+	return keepalives.Length();
+}
+
 void*
 Worker::ThreadMain() {
 	while (true == GetRunning()) {

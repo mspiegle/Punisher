@@ -16,6 +16,7 @@
 #include "Item.hxx"
 #include "String.hxx"
 #include "Statistics.hxx"
+#include "SocketMap.hxx"
 
 #include <stdint.h>
 #include <deque>
@@ -24,13 +25,13 @@ namespace Punisher {
 
 class Worker : public Thread, public Event::IHandler {
 	private:
-		size_t                       iterations;
-		uint64_t                     next_request;
-		const Config*                config;
-		Statistics                   stats;
-		Event::PollManager           manager;
-		std::deque<M::String>        errors;
-		std::deque<Network::Socket*> keepalives;
+		size_t                iterations;
+		uint64_t              next_request;
+		const Config*         config;
+		Statistics            stats;
+		Event::PollManager    manager;
+		std::deque<M::String> errors;
+		Network::SocketMap    keepalives;
 
 	public:
 		Worker();
@@ -53,9 +54,7 @@ class Worker : public Thread, public Event::IHandler {
 		void HandleError(const Event::Item& item);
 		void HandleAcceptable(const Event::Item& item);
 
-		inline int GetKeepaliveSockets() const {
-			return keepalives.size();
-		}
+		int GetKeepaliveSockets();
 
 		//error handling
 		inline const std::deque<M::String>& GetErrors() const {

@@ -27,6 +27,8 @@ class SocketMap {
 
 		void Push(Socket* socket);
 		Socket* Pop();
+
+		int Length();
 };
 
 }

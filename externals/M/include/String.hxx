@@ -34,7 +34,6 @@ class String {
 		static const size_t npos = -1;
 
 		size_t Capacity() const;
-		size_t Size() const;
 		inline size_t Length() const {
 			return length;
 		}

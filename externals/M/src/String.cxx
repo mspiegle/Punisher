@@ -82,11 +82,6 @@ String::Reserve(size_t arg) {
 	}
 }
 
-size_t
-String::Size() const {
-	return length;
-}
-
 bool
 String::operator<(const String& arg) {
 	return (Compare(arg) < 0) ? true : false;

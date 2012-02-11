@@ -39,6 +39,11 @@ SocketMap::Push(Socket* socket) {
 	}
 }
 
+int
+SocketMap::Length() {
+	return container.size();
+}
+
 Socket*
 SocketMap::Pop() {
 	int ret = -1;
